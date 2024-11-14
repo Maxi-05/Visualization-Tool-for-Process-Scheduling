@@ -245,9 +245,7 @@ The backend is responsible for fetching real-time process statistics using the \
 \subsubsection{Logged Data}
 \begin{itemize}
     \item An example of the logged data is shown below.
-    \begin{minted}{text} 
-        Chrome_ChildIOT-33594   [003] d..2. 27300.882725: sched_migrate_task: comm=Compositor pid=32759 prio=120 orig_cpu=0 dest_cpu=3
-    \end{minted}
+    \item \textit{Chrome\_ChildIOT-33594   [003] d..2. 27300.882725: sched\_migrate\_task : comm=Compositor pid=32759 prio=120 orig\_cpu=0 dest\_cpu=3}
     \item In the above log entry, Chrome with PID 33594 initiated the migration of the Compositor process with PID 32759 from CPU 0 to CPU 3.
     \item $prio =120$ is the priority of the process. Lower prio means higher priority.
     \item $27300.882725$ is the timestamp of the event. (migration).
