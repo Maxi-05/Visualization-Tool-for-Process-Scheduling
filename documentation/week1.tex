@@ -90,7 +90,30 @@ top=20mm,
 \end{itemize}
 
 \subsection{Progress}
-\subsubsection{Frontend Design}
+\subsubsection{Frontend Design and Basic implementation}
+\begin{itemize}
+    \item
+\end{itemize}
+\subsubsection{Ideas for Plots and information from backend}
+\begin{itemize}
+    \item {\bf Processes Running on the System:}
+    \begin{itemize}
+        \item
+    \end{itemize}
+    \item {\bf Gantt Chart of various Processes}
+    \begin{itemize}
+        \item
+    \end{itemize}
+    \item {\bf Status wise distribution of processes}
+    \begin{itemize}
+        \item
+    \end{itemize}
+    \item {\bf CPU Utilization}
+    \begin{itemize}
+        \item
+    \end{itemize}
+\end{itemize}
+
 \section{Backend Team}
 \subsection{Extracting Process Information}
 \subsubsection{Command: ps -eo pid,lstart,comm}
@@ -150,8 +173,9 @@ The \texttt{pidstat} command is used to gather detailed statistics for individua
 
 This tool is helpful for detailed performance analysis and understanding how specific processes affect system resources.
 
-To know whether the process ended or not, we can use 
-ps -p pid
+\subsubsection{Command: ps -p pid}
+\textbf{Purpose}: \
+To know whether the process ended or not.
  \begin{itemize}
     \item If it shows some data, it is still running.
     \item If no data is shown, the process ended.
@@ -197,7 +221,7 @@ The backend is responsible for fetching real-time process statistics using the \
     
     \mintinline{bash}{cd /sys/kernel/debug/tracing}
     \item Enable "sched\_migrate\_task" that allows to track and log the migration of tasks.
-    
+
     \mintinline{bash}{echo 1 | sudo tee events/sched/sched_migrate_task/enable}
     \item Start tracing the events. 
     
