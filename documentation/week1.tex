@@ -91,6 +91,7 @@ top=20mm,
 
 \subsection{Progress}
 \subsubsection{Frontend Design}
+\subsubsection{Ideas for Plots and information from backend}
 \section{Backend Team}
 \subsection{Linking Backend and Frontend}
 The objective is to create a backend server that fetches real-time system process statistics using the \texttt{pidstat} command and streams the data to a frontend via WebSockets. The application uses Flask as the web framework and Flask-SocketIO to establish real-time communication between the backend and frontend.
@@ -131,7 +132,7 @@ The backend is responsible for fetching real-time process statistics using the \
     
     \mintinline{bash}{cd /sys/kernel/debug/tracing}
     \item Enable "sched\_migrate\_task" that allows to track and log the migration of tasks.
-    
+
     \mintinline{bash}{echo 1 | sudo tee events/sched/sched_migrate_task/enable}
     \item Start tracing the events. 
     
