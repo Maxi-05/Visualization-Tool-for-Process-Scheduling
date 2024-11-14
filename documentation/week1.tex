@@ -79,7 +79,81 @@ top=20mm,
 \clearpage
 
 \section{Frontend Team}
+\subsection{Tasks}
+\begin{itemize}
+    \item The tasks for this week is to identify the components that are required for the frontend. This includes the following.
+    \begin{itemize}
+        \item Coming up with a frontend design and layout.
+        \item Ideation on what all different plots can be displayed.
+        \item Informing the backend team about the requirements of various informations.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Progress}
+\subsubsection{Frontend Design}
 \section{Backend Team}
+\subsection{Linking Backend and Frontend}
+The objective is to create a backend server that fetches real-time system process statistics using the \texttt{pidstat} command and streams the data to a frontend via WebSockets. The application uses Flask as the web framework and Flask-SocketIO to establish real-time communication between the backend and frontend.
+
+\subsubsection{Tools and Libraries Used}
+
+\begin{itemize}
+    \item \textbf{Flask}: A lightweight web framework for Python that simplifies the development of web applications.
+    \item \textbf{Flask-SocketIO}: An extension for Flask that enables real-time communication between the server and the client using WebSockets.
+    \item \textbf{subprocess}: A Python module used to run external commands. In this case, it is used to execute the \texttt{pidstat} command, which collects CPU statistics for processes running on the system.
+    \item \textbf{re (Regular Expressions)}: A Python module for matching patterns in strings. It is used to parse the output of the \texttt{pidstat} command.
+    \item \textbf{threading}: A Python module used to create background threads. In this project, it allows the data-fetching process to run concurrently with the main server.
+\end{itemize}
+
+\subsubsection{Architecture}
+
+\begin{itemize}
+\item {\bf Backend (Flask Server with SocketIO) :}
+The backend is responsible for fetching real-time process statistics using the \texttt{pidstat} command, parsing the output, and sending the data to the frontend using WebSockets.
+
+\item{\bf Real-Time Data Fetching :}
+\begin{itemize}
+    \item The \texttt{pidstat} command is used to gather CPU statistics for processes every second. The output contains several fields, including process ID (PID), user and system CPU usage, and the process command.
+    \item A background thread is created to run the \texttt{pidstat} command continuously, fetching data at specified intervals (e.g., every 2 seconds).
+    \item The data is parsed using a regular expression, and relevant statistics are extracted and formatted into a dictionary.
+\end{itemize}
+
+\item{\bf Real-Time Communication :}
+\begin{itemize}
+    \item \texttt{Flask-SocketIO} is used to emit the parsed data to the frontend in real time. This allows the frontend to display the latest statistics as they are gathered by the backend.
+    \item The data is emitted as a WebSocket event (\texttt{'pidstat\_data'}), making it available for frontend visualization.
+\end{itemize}
+\end{itemize}
+\subsection{Process Migration}
+\subsubsection{Enabling tracking to log the process migration}
+\begin{itemize}
+    \item Navigate to the tracing directory. 
+    
+    \mintinline{bash}{cd /sys/kernel/debug/tracing}
+    \item Enable "sched\_migrate\_task" that allows to track and log the migration of tasks.
+    
+    \mintinline{bash}{echo 1 | sudo tee events/sched/sched_migrate_task/enable}
+    \item Start tracing the events. 
+    
+    \mintinline{bash}{echo 1 | sudo tee tracing_on}
+    \item Wait for some time and let tracer log some migrations.
+    \item Stop the tracing. 
+    
+    \mintinline{bash}{echo 0 | sudo tee tracing_on}
+    \item Check the trace file. 
+    
+    \mintinline{bash}{cat trace}
+\end{itemize}
+\subsubsection{Logged Data}
+\begin{itemize}
+    \item An example of the logged data is shown below.
+    \begin{minted}{text} 
+        Chrome_ChildIOT-33594   [003] d..2. 27300.882725: sched_migrate_task: comm=Compositor pid=32759 prio=120 orig_cpu=0 dest_cpu=3
+    \end{minted}
+    \item In the above log entry, Chrome with PID 33594 initiated the migration of the Compositor process with PID 32759 from CPU 0 to CPU 3.
+    \item $prio =120$ is the priority of the process. Lower prio means higher priority.
+    \item $27300.882725$ is the timestamp of the event. (migration).
+\end{itemize}
 \subsection{Studying the proc folder}
 \subsubsection{What is the proc folder?}
 \subsubsection{Add the folder name you studied!!}
