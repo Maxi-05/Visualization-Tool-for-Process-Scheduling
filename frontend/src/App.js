@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import './App.css';
 
 const socket = io('http://localhost:5000'); // Adjust the port if necessary
 
@@ -20,13 +21,13 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Running PIDs on Core 0</h1>
-      <ul>
-        {pids.map(pid => (
-          <li key={pid}>PID: {pid}</li>
-        ))}
-      </ul>
+    <header className="header">
+      <h1 className="title">Process Scheduling Visualisation Tool</h1>
+    </header>
+    <div className="content">
+      {/* Other content can go here */}
     </div>
+  </div>
   );
 }
 
