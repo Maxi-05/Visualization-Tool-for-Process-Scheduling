@@ -92,6 +92,72 @@ top=20mm,
 \subsection{Progress}
 \subsubsection{Frontend Design}
 \section{Backend Team}
+\subsection{Extracting Process Information}
+\subsubsection{Command: ps -eo pid,lstart,comm}
+
+\textbf{Purpose}: \
+This command displays the details of all currently running processes with the following information:
+
+\begin{itemize}
+    \item \textbf{PID}: The Process ID, which uniquely identifies each process.
+    \item \textbf{Lstart}: The start time of the process.
+    \item \textbf{Comm}: The command or program name that initiated the process.
+\end{itemize}
+
+This command is useful for tracking when a process was started and understanding its origin.
+
+\subsubsection{Command: ps -eo pid,etime,comm}
+
+\textbf{Purpose}: \
+This command displays the following details for all running processes:
+
+\begin{itemize}
+    \item \textbf{Etimes}: The elapsed time since the process started, which tells us how long the process has been running.
+\end{itemize}
+
+This information is useful for understanding how long a process has been active since it started.
+
+\subsubsection{Command: cat /proc/[pid]/stat}
+
+\textbf{Purpose}: \
+This command is useful for retrieving detailed information about a specific process. It provides the following data:
+
+\begin{itemize}
+    \item \textbf{State}: The current state of the process (e.g., running, sleeping, etc.).
+    \item \textbf{Utime}: The total time the process has been running in user mode. This value represents the amount of CPU time consumed by the process in user mode.
+    \item \textbf{Stime}: The total time the process has been running in kernel mode. This value represents the CPU time spent by the process in kernel space.
+\end{itemize}
+
+This command is valuable for getting low-level process statistics and understanding the process's CPU usage in both user and kernel modes.
+
+\subsubsection{Command: ps aux}
+
+\textbf{Purpose}: \
+This command provides more detailed information about all running processes, including:
+
+\begin{itemize}
+    \item \textbf{State}: The current state of the process.
+    \item \textbf{Start time}: The start time of the process.
+    \item \textbf{Total CPU time}: The total CPU time the process has consumed.
+\end{itemize}
+
+This command is useful for monitoring various aspects of processes and understanding their current state and resource usage.
+
+\subsubsection{Command: pidstat}
+
+\textbf{Purpose}: \
+The \texttt{pidstat} command is used to gather detailed statistics for individual processes. It can provide more granular information about resource utilization, including CPU usage, memory usage, and more, for each process.
+
+This tool is helpful for detailed performance analysis and understanding how specific processes affect system resources.
+
+To know whether the process ended or not, we can use 
+ps -p pid
+ \begin{itemize}
+    \item If it shows some data, it is still running.
+    \item If no data is shown, the process ended.
+ \end{itemize}
+Consider a specific time duration. During this time, we generate a list of all processes currently running. After this duration has passed, we check the list of running processes again. If we find that any process from the initial list is no longer running, it indicates that this process has completed or ended.
+
 \subsection{Linking Backend and Frontend}
 The objective is to create a backend server that fetches real-time system process statistics using the \texttt{pidstat} command and streams the data to a frontend via WebSockets. The application uses Flask as the web framework and Flask-SocketIO to establish real-time communication between the backend and frontend.
 
@@ -154,11 +220,10 @@ The backend is responsible for fetching real-time process statistics using the \
     \item $prio =120$ is the priority of the process. Lower prio means higher priority.
     \item $27300.882725$ is the timestamp of the event. (migration).
 \end{itemize}
-\subsection{Studying the proc folder}
-\subsubsection{What is the proc folder?}
-\subsubsection{Add the folder name you studied!!}
+\subsection{Completely Fair Scheduler(CFS) Understanding}
 \begin{itemize}
-    \item try to put important points in bullet points
-    \item At the end add some points on what you feel can be done with that information.
+    \item As we are implementing this project on Linux OS, an understanding of its scheduler is beneficial.
+    \item It assigns priority to a process based on its niceness value which in turn is based on the vruntime of the process.
+    \item The process with the least vruntime is given the highest priority. vruntime (virtual runtime) tracks the time a process has spent on the CPU, adjusted for its priority.
 \end{itemize}
 \end{document}
