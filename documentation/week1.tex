@@ -107,36 +107,43 @@ The objective is to create a backend server that fetches real-time system proces
 
 \subsubsection{Architecture}
 
-\subsubsubsection{Backend (Flask Server with SocketIO)}
+\begin{itemize}
+\item {\bf Backend (Flask Server with SocketIO) :}
 The backend is responsible for fetching real-time process statistics using the \texttt{pidstat} command, parsing the output, and sending the data to the frontend using WebSockets.
 
-\subsubsubsection{Real-Time Data Fetching}
+\item{\bf Real-Time Data Fetching :}
 \begin{itemize}
     \item The \texttt{pidstat} command is used to gather CPU statistics for processes every second. The output contains several fields, including process ID (PID), user and system CPU usage, and the process command.
     \item A background thread is created to run the \texttt{pidstat} command continuously, fetching data at specified intervals (e.g., every 2 seconds).
     \item The data is parsed using a regular expression, and relevant statistics are extracted and formatted into a dictionary.
 \end{itemize}
 
-\subsubsubsection{Real-Time Communication}
+\item{\bf Real-Time Communication :}
 \begin{itemize}
     \item \texttt{Flask-SocketIO} is used to emit the parsed data to the frontend in real time. This allows the frontend to display the latest statistics as they are gathered by the backend.
     \item The data is emitted as a WebSocket event (\texttt{'pidstat\_data'}), making it available for frontend visualization.
 \end{itemize}
-
+\end{itemize}
 \subsection{Process Migration}
 \subsubsection{Enabling tracking to log the process migration}
+\begin{itemize}
     \item Navigate to the tracing directory. \mintinline{bash}{cd /sys/kernel/debug/tracing}
-    \item Enable "sched_migrate_task" that allows to track and log the migration of tasks. \mintinline{bash}{echo 1 | sudo tee events/sched/sched_migrate_task/enable}
+    \item Enable "sched\_migrate\_task" that allows to track and log the migration of tasks.
+    
+    \mintinline{bash}{echo 1 | sudo tee events/sched/sched_migrate_task/enable}
     \item Start tracing the events. \mintinline{bash}{echo 1 | sudo tee tracing_on}
     \item Wait for some time and let tracer log some migrations.
     \item Stop the tracing. \mintinline{bash}{echo 0 | sudo tee tracing_on}
     \item Check the trace file. \mintinline{bash}{cat trace}
+\end{itemize}
 \subsubsection{Logged Data}
+\begin{itemize}
     \item An example of the logged data is shown below.
     \begin{minted}{text} 
         Chrome_ChildIOT-33594   [003] d..2. 27300.882725: sched_migrate_task: comm=Compositor pid=32759 prio=120 orig_cpu=0 dest_cpu=3
     \end{minted}
     \item 
+\end{itemize}
 \subsection{Studying the proc folder}
 \subsubsection{What is the proc folder?}
 \subsubsection{Add the folder name you studied!!}
