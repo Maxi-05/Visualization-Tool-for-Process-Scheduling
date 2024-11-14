@@ -127,14 +127,22 @@ The backend is responsible for fetching real-time process statistics using the \
 \subsection{Process Migration}
 \subsubsection{Enabling tracking to log the process migration}
 \begin{itemize}
-    \item Navigate to the tracing directory. \mintinline{bash}{cd /sys/kernel/debug/tracing}
+    \item Navigate to the tracing directory. 
+    
+    \mintinline{bash}{cd /sys/kernel/debug/tracing}
     \item Enable "sched\_migrate\_task" that allows to track and log the migration of tasks.
     
     \mintinline{bash}{echo 1 | sudo tee events/sched/sched_migrate_task/enable}
-    \item Start tracing the events. \mintinline{bash}{echo 1 | sudo tee tracing_on}
+    \item Start tracing the events. 
+    
+    \mintinline{bash}{echo 1 | sudo tee tracing_on}
     \item Wait for some time and let tracer log some migrations.
-    \item Stop the tracing. \mintinline{bash}{echo 0 | sudo tee tracing_on}
-    \item Check the trace file. \mintinline{bash}{cat trace}
+    \item Stop the tracing. 
+    
+    \mintinline{bash}{echo 0 | sudo tee tracing_on}
+    \item Check the trace file. 
+    
+    \mintinline{bash}{cat trace}
 \end{itemize}
 \subsubsection{Logged Data}
 \begin{itemize}
@@ -142,7 +150,8 @@ The backend is responsible for fetching real-time process statistics using the \
     \begin{minted}{text} 
         Chrome_ChildIOT-33594   [003] d..2. 27300.882725: sched_migrate_task: comm=Compositor pid=32759 prio=120 orig_cpu=0 dest_cpu=3
     \end{minted}
-    \item 
+    \item In the above log entry, Chrome with PID 33594 initiated the migration of the Compositor process with PID 32759 from CPU 0 to CPU 3.
+    \item $prio =120$ is the priority of the process. Lower prio means higher priority.
 \end{itemize}
 \subsection{Studying the proc folder}
 \subsubsection{What is the proc folder?}
