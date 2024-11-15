@@ -7,4 +7,4 @@ pdflatex -shell-escape $tex_file_name
 
 # Clean up auxiliary files
 rm -rf _minted-${tex_file}
-rm ${tex_file}.aux ${tex_file}.log ${tex_file}.toc ${tex_file}.out ${tex_file}.lof texput.log
+rm ${tex_file}.aux ${tex_file}.log ${tex_file}.toc ${tex_file}.out ${tex_file}.lof texput.log .${tex_file}.tex.swp
