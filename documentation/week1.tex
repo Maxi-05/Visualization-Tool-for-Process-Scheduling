@@ -332,7 +332,7 @@ The objective is to create a backend server that fetches real-time system proces
 \subsection{Completely Fair Scheduler(CFS) Understanding}
 \begin{itemize}
     \item As we are implementing this project on Linux OS, an understanding of its scheduler is beneficial.
-    \item It assigns priority to a process based on its niceness value which in turn is based on the vruntime of the process.
-    \item The process with the least vruntime is given the highest priority. vruntime (virtual runtime) tracks the time a process has spent on the CPU, adjusted for its priority.
+    \item It assigns priority to a process based on its niceness value which in turn is based on the \mintinline{bash}{vruntime} of the process.
+    \item The process with the least vruntime is given the highest priority. \mintinline{bash}{vruntime} (virtual runtime) tracks the time a process has spent on the CPU, adjusted for its priority.
 \end{itemize}
 \end{document}
