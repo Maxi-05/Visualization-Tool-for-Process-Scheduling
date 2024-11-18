@@ -32,10 +32,11 @@ def update_process_data():
     for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'create_time']):
         try:
             current_pids.add(proc.info['pid'])
+            cpu_percent = proc.info['cpu_percent'] if proc.info['cpu_percent'] is not None else 0.0
             processes.append({
                 'pid': proc.info['pid'],
                 'name': proc.info['name'],
-                'cpu_percent': proc.info['cpu_percent'],
+                'cpu_percent': cpu_percent,
                 'create_time': datetime.datetime.fromtimestamp(proc.info['create_time']).strftime('%Y-%m-%d %H:%M:%S'),
             })
         except (psutil.NoSuchProcess, psutil.AccessDenied):
@@ -85,4 +86,10 @@ def on_disconnect():
 
 if __name__ == '__main__':
     threading.Thread(target=monitor_cpu, daemon=True).start()
-    socketio.run(app, host='0.0.0.0', port=5000)
+    
+    # Change port to avoid conflicts and handle exceptions gracefully.
+    try:
+        socketio.run(app, host='0.0.0.0', port=5000)
+    except OSError as e:
+        print(f"Error starting server: {e}. Trying a different port...")
+        socketio.run(app, host='0.0.0.0', port=5001)  # Try a different port if 5000 is in use.

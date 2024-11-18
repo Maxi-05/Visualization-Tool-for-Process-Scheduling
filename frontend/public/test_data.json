@@ -1,0 +1,39 @@
+{
+    "processes": [
+        {
+            "id": 1,
+            "name": "Process 1",
+            "arrivalTime": 0,
+            "burstTime": 5,
+            "priority": 2
+        },
+        {
+            "id": 2,
+            "name": "Process 2",
+            "arrivalTime": 2,
+            "burstTime": 3,
+            "priority": 1
+        },
+        {
+            "id": 3,
+            "name": "Process 3",
+            "arrivalTime": 4,
+            "burstTime": 1,
+            "priority": 3
+        },
+        {
+            "id": 4,
+            "name": "Process 4",
+            "arrivalTime": 6,
+            "burstTime": 7,
+            "priority": 2
+        },
+        {
+            "id": 5,
+            "name": "Process 5",
+            "arrivalTime": 8,
+            "burstTime": 2,
+            "priority": 1
+        }
+    ]
+}
