@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import './App.css';
+import { io } from "socket.io-client";
 
 function App() {
   const [processes, setProcesses] = useState([]);
 
   useEffect(() => {
-    fetch('test_data.json')
-      .then(response => response.json())
-      .then(data => {
-        // setCpuUsage(data.processes.priority);
-        setProcesses(data.processes);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    // Connect to the Flask Socket.IO server
+    const socket = io('http://localhost:5000');
+
+    // Listen for real-time data from the server
+    socket.on('cpu_data', (data) => {
+      console.log('Received CPU data:', data);
+      setProcesses(data);
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (
@@ -31,15 +38,12 @@ function App() {
               top: 5, right: 30, left: 20, bottom: 5,
             }}
           >
-            {console.log('Chart data:', processes)}{/* This is just to check the data */}
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="burstTime" fill="#8884d8" />
-            <Bar dataKey="arrivalTime" fill="#82ca9d" />
-            <Bar dataKey="priority" fill="#ffc658" />
+            <Bar dataKey="cpu_percent" fill="#8884d8" />
           </BarChart>
         </div>
       </main>
