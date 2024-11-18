@@ -7,29 +7,142 @@
   flex-direction: column; /* Arrange children vertically */
 }
 
-/* Header styling */
-.header {
-  height: 15vh; /* Set header height */
-  background-color: #000000; /* Example background color */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-}
-
-/* Title styling */
-.title {
-  font-size: 3rem; /* Large font size for the title */
+/* General body styles */
+body {
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+  background-color: #e0f7fa; /* Light cyan background */
+  color: #333; /* Dark text color for contrast */
 }
 
-/* Content styling */
-.content {
-  flex: 1; /* Take up the remaining space below the header */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Container for the main content */
+.container {
+  max-width: 1200px; /* Limit width for larger screens */
+  margin: auto; /* Center the container */
+  padding: 20px; /* Add padding inside the container */
 }
 
-/* Footer styling  this is some sodhi code just for testing rebase */
+/* Heading styles */
+h1 {
+  text-align: center; /* Center the heading */
+  color: #00796b; /* Dark teal color for the heading */
+  margin-bottom: 30px; /* Space below the heading */
+}
+
+/* Footer styles */
+footer {
+  text-align: center; /* Center the footer text */
+  margin-top: 50px; /* Space above the footer */
+  padding: 20px; /* Padding inside the footer */
+  background-color: #004d40; /* Darker teal background for footer */
+  color: white; /* White text color in the footer */
+}
+
+/* Link styles in the footer */
+footer a {
+  color: #ffeb3b; /* Bright yellow for links */
+  text-decoration: none; /* Remove underline from links */
+}
+
+footer a:hover {
+  text-decoration: underline; /* Underline on hover for better visibility */
+}
+
+/* Footer columns */
+.footer-columns {
+  display: flex; /* Use flexbox for columns */
+  justify-content: space-around; /* Space out the columns evenly */
+  flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+}
+
+.footer-column {
+  flex: 1; /* Each column takes equal space */
+  min-width: 200px; /* Minimum width for each column */
+  padding: 10px; /* Padding inside each column */
+}
+
+.footer-column h3 {
+  color: #ffeb3b; /* Bright yellow for column headings */
+  margin-bottom: 10px; /* Space below the column headings */
+}
+
+.footer-column ul {
+  list-style: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+}
+
+.footer-column ul li {
+  margin-bottom: 8px; /* Space below each list item */
+}
+
+.footer-column ul li a {
+  color: white; /* White text color for links */
+  text-decoration: none; /* Remove underline from links */
+}
+
+.footer-column ul li a:hover {
+  text-decoration: underline; /* Underline on hover for better visibility */
+}
+
+/* Add these styles to your existing App.css */
+
+/* Input section styles */
+.input {
+  margin: 20px;
+  text-align: center;
+}
+
+.input h2 {
+  color: #00796b; /* Dark teal color for the heading */
+}
+
+.input input {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #00796b; /* Dark teal border */
+  border-radius: 5px;
+}
+
+.input button {
+  padding: 10px 20px;
+  background-color: #00796b; /* Dark teal background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.input button:hover {
+  background-color: #004d40; /* Darker teal on hover */
+}
+
+/* Processes section styles */
+.processes {
+  margin: 20px;
+  text-align: center;
+}
+
+.processes h2 {
+  color: #00796b; /* Dark teal color for the heading */
+}
+
+/* CPU usage section styles */
+.cpu-usage {
+  margin: 20px;
+  text-align: center;
+}
+
+.cpu-usage h2 {
+  color: #00796b; /* Dark teal color for the heading */
+}
+
+.cpu-core {
+  margin: 10px 0;
+}
+
+.cpu-bar {
+  height: 20px;
+  background-color: #8884d8; /* Bar color */
+}
