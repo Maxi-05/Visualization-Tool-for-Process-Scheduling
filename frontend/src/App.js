@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import './App.css';
 import { io } from "socket.io-client";
+import Plot1 from './components/Plot1';
 
 function App() {
   const [processes, setProcesses] = useState([]);
@@ -28,24 +28,7 @@ function App() {
         <h1>Process Scheduling Visualization Tool</h1>
       </header>
       <main>
-        <div className="processes">
-          <h2>Processes</h2>
-          <BarChart
-            width={600}
-            height={300}
-            data={processes}
-            margin={{
-              top: 5, right: 30, left: 20, bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="cpu_percent" fill="#8884d8" />
-          </BarChart>
-        </div>
+        <Plot1 processes={ processes }/>
       </main>
       <footer>
         <hr />
