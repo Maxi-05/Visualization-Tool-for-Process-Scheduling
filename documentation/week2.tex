@@ -78,5 +78,31 @@ top=20mm,
 \end{center}
 \clearpage
 
-\section{Introduction}
+\section{Design Choices}
+\subsection{Frontend}
+We choose to use ReactJS for the frontend of our project. ReactJS is a JavaScript library that is used to build user interfaces. It is maintained by Facebook and a community of individual developers and companies. ReactJS is used for handling the view layer for web and mobile apps. ReactJS allows us to create reusable UI components. It is currently one of the most popular JavaScript libraries and has a strong foundation and large community behind it. We chose ReactJS because it is easy to learn and use, and it allows us to create a dynamic and interactive user interface.
+
+\subsection{Backend}
+We choose to use Flask for the backend of our project. Flask is a micro web framework written in Python. It is lightweight and easy to use. Flask is designed to make getting started quick and easy, with the ability to scale up to complex applications. We chose Flask because it is easy to learn and use, and it allows us to create a RESTful API for our project. Flask is also easy to deploy and maintain, which makes it a good choice for our project.
+
+\subsection{Communication between Frontend and Backend}
+We are using the socket framework to establish communication between the frontend and the backend. The socket framework allows us to establish a bidirectional communication channel between the client and the server. This allows us to send and receive data in real-time, which is important for our project. We are using the socket.io library for the frontend and the Flask-SocketIO library for the backend. These libraries make it easy to establish a socket connection between the client and the server and send and receive data in real-time.
+
+\section{Plots}
+\subsection{Top 5 High-Load Processes}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/top5_1.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/top5_2.png}
+    \end{minipage}
+    \caption{Top 5 High-Load Processes at different time instances}
+\end{figure}
+
+The plot shows the top 5 high-load processes in the system. The x-axis represents the process ID, and the y-axis represents the \% CPU load of the process. The plot shows the CPU load at two different instances of the time. The plot is updated in real-time, so the user can see the CPU load of the top 5 high-load processes as it changes over time.
 \end{document}
