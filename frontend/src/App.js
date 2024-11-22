@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { io } from "socket.io-client";
 import Plot1 from './components/Plot1';
+import Plot2 from './components/Plot2';
 
 function App() {
   const [processes, setProcesses] = useState([]);
@@ -27,9 +28,14 @@ function App() {
       <header>
         <h1>Process Scheduling Visualization Tool</h1>
       </header>
-      <main>
-        <Plot1 processes={ processes }/>
-      </main>
+      <main style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ flex: 1, marginRight: '10px' }}>
+                <Plot1 processes={processes} />
+            </div>
+            <div style={{ flex: 1, marginLeft: '10px' }}>
+                <Plot2 processes={processes} />
+            </div>
+        </main>
       <footer>
         <hr />
         <h3>Developed By</h3>

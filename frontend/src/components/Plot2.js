@@ -2,10 +2,10 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import '../App.css';
 
-function Plot1({ processes }) {
+function Plot2({ processes }) {
   return (
     <div className="processes">
-        <h2>CPU Usage</h2>
+        <h2>Processes</h2>
         <BarChart
         width={600}
         height={300}
@@ -25,4 +25,4 @@ function Plot1({ processes }) {
   )
 }
 
-export default Plot1;
+export default Plot2
