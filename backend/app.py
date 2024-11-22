@@ -16,6 +16,39 @@ NUM_PROCESSES = 5  # Number of top CPU processes to display
 process_data = []  # Store current process data
 killed_processes = set()  # Track processes that have been terminated
 
+# Global declarations for cpu times
+cpu_times_info = []
+
+### Print the data for debugging
+@app.route('/task1')
+def task1():
+    return '''
+    <h1>CPU Monitor</h1>
+    <p>JSON data from socket.io will appear below:</p>
+    <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('cpu_data', function(data) {
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+    '''
+@app.route('/task2')
+def task2():
+    return '''
+    <h1>CPU Times</h1>
+    <p>JSON data from socket.io will appear below:</p>
+    <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('cpu_times', function(data) {
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+    '''
+### End of debugging
 
 def get_current_time():
     """Returns the current timestamp as a formatted string."""
@@ -68,6 +101,54 @@ def monitor_cpu():
         socketio.emit('cpu_data', process_data)  # Emit updated data to all clients
         time.sleep(SLEEP_INTERVAL)
 
+def get_core_times():
+    global cpu_times_info
+    per_core_cpu_times = None
+    while True:
+        prev_per_core_cpu_times = per_core_cpu_times
+        try:
+            per_core_cpu_times = psutil.cpu_times(percpu=True)
+        except Exception as e:
+            print(f"Error getting per-core CPU times: {e}")
+            continue
+        
+        if prev_per_core_cpu_times is not None:
+            user_all, system_all, nice_all, irq_all, softirq_all, iowait_all, steal_all = 0, 0, 0, 0, 0, 0, 0 
+            for i, cpu_time in enumerate(per_core_cpu_times):
+                cpu_times_info.append({
+                    'core': i,
+                    'user_time': cpu_time.user - prev_per_core_cpu_times[i].user,
+                    'system_time': cpu_time.system - prev_per_core_cpu_times[i].system,
+                    'nice_time': cpu_time.nice - prev_per_core_cpu_times[i].nice,
+                    'irq_time': cpu_time.irq - prev_per_core_cpu_times[i].irq,
+                    'softirq_time': cpu_time.softirq - prev_per_core_cpu_times[i].softirq,
+                    'iowait_time': cpu_time.iowait - prev_per_core_cpu_times[i].iowait,
+                    'steal_time': cpu_time.steal - prev_per_core_cpu_times[i].steal,
+                })
+                user_all += cpu_times_info[-1]['user_time']
+                system_all += cpu_times_info[-1]['system_time']
+                nice_all += cpu_times_info[-1]['nice_time']
+                irq_all += cpu_times_info[-1]['irq_time']
+                softirq_all += cpu_times_info[-1]['softirq_time']
+                iowait_all += cpu_times_info[-1]['iowait_time']
+                steal_all += cpu_times_info[-1]['steal_time']
+            cpu_times_info.append({
+                'core': 'all',
+                'user_time': user_all,
+                'system_time': system_all,
+                'nice_time': nice_all,
+                'irq_time': irq_all,
+                'softirq_time': softirq_all,
+                'iowait_time': iowait_all,
+                'steal_time': steal_all,
+            })
+        #Emits the data to the client
+        socketio.emit('cpu_times', cpu_times_info)
+        time.sleep(SLEEP_INTERVAL)
+        cpu_times_info = []
+
+
+
 
 @app.route('/')
 def index():
@@ -86,6 +167,7 @@ def on_disconnect():
 
 if __name__ == '__main__':
     threading.Thread(target=monitor_cpu, daemon=True).start()
+    threading.Thread(target=get_core_times, daemon=True).start()
     
     # Change port to avoid conflicts and handle exceptions gracefully.
     try:
