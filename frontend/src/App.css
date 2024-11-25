@@ -1,10 +1,8 @@
-/* App.css */
-
-/* Make the App container take the full height */
+/* Full-height App container */
 .App {
   height: 100vh;
   display: flex;
-  flex-direction: column; /* Arrange children vertically */
+  flex-direction: column;
 }
 
 /* General body styles */
@@ -19,74 +17,70 @@ body {
 
 /* Container for the main content */
 .container {
-  max-width: 1200px; /* Limit width for larger screens */
-  margin: auto; /* Center the container */
-  padding: 20px; /* Add padding inside the container */
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
 }
 
 /* Heading styles */
 h1 {
-  text-align: center; /* Center the heading */
-  color: #00796b; /* Dark teal color for the heading */
-  margin-bottom: 30px; /* Space below the heading */
+  text-align: center;
+  color: #00796b;
+  margin-bottom: 30px;
 }
 
 /* Footer styles */
 footer {
-  text-align: center; /* Center the footer text */
-  margin-top: 50px; /* Space above the footer */
-  padding: 20px; /* Padding inside the footer */
-  background-color: #004d40; /* Darker teal background for footer */
-  color: white; /* White text color in the footer */
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  background-color: #004d40;
+  color: white;
 }
 
-/* Link styles in the footer */
 footer a {
-  color: #ffeb3b; /* Bright yellow for links */
-  text-decoration: none; /* Remove underline from links */
+  color: #ffeb3b;
+  text-decoration: none;
 }
 
 footer a:hover {
-  text-decoration: underline; /* Underline on hover for better visibility */
+  text-decoration: underline;
 }
 
-/* Footer columns */
 .footer-columns {
-  display: flex; /* Use flexbox for columns */
-  justify-content: space-around; /* Space out the columns evenly */
-  flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .footer-column {
-  flex: 1; /* Each column takes equal space */
-  min-width: 200px; /* Minimum width for each column */
-  padding: 10px; /* Padding inside each column */
+  flex: 1;
+  min-width: 200px;
+  padding: 10px;
 }
 
 .footer-column h3 {
-  color: #ffeb3b; /* Bright yellow for column headings */
-  margin-bottom: 10px; /* Space below the column headings */
+  color: #ffeb3b;
+  margin-bottom: 10px;
 }
 
 .footer-column ul {
-  list-style: none; /* Remove default list styling */
-  padding: 0; /* Remove default padding */
+  list-style: none;
+  padding: 0;
 }
 
 .footer-column ul li {
-  margin-bottom: 8px; /* Space below each list item */
+  margin-bottom: 8px;
 }
 
 .footer-column ul li a {
-  color: white; /* White text color for links */
-  text-decoration: none; /* Remove underline from links */
+  color: white;
+  text-decoration: none;
 }
 
 .footer-column ul li a:hover {
-  text-decoration: underline; /* Underline on hover for better visibility */
+  text-decoration: underline;
 }
-
-/* Add these styles to your existing App.css */
 
 /* Input section styles */
 .input {
@@ -95,19 +89,19 @@ footer a:hover {
 }
 
 .input h2 {
-  color: #00796b; /* Dark teal color for the heading */
+  color: #00796b;
 }
 
 .input input {
   padding: 10px;
   margin: 10px;
-  border: 1px solid #00796b; /* Dark teal border */
+  border: 1px solid #00796b;
   border-radius: 5px;
 }
 
 .input button {
   padding: 10px 20px;
-  background-color: #00796b; /* Dark teal background */
+  background-color: #00796b;
   color: white;
   border: none;
   border-radius: 5px;
@@ -115,7 +109,7 @@ footer a:hover {
 }
 
 .input button:hover {
-  background-color: #004d40; /* Darker teal on hover */
+  background-color: #004d40;
 }
 
 /* Processes section styles */
@@ -125,24 +119,67 @@ footer a:hover {
 }
 
 .processes h2 {
-  color: #00796b; /* Dark teal color for the heading */
+  color: #00796b;
 }
 
-/* CPU usage section styles */
-.cpu-usage {
-  margin: 20px;
-  text-align: center;
+.cores-container {
+  display: flex; /* Enable flexbox */
+  justify-content: space-around; /* Space cores evenly */
+  align-items: flex-start; /* Align cores at the top */
+  margin-top: 20px;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  width: 100vw; /* Use full viewport width */
+  padding: 0 20px; /* Optional: Add padding */
+  box-sizing: border-box; /* Include padding in the width calculation */
 }
 
-.cpu-usage h2 {
-  color: #00796b; /* Dark teal color for the heading */
+
+/* Core styling */
+.core {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  flex: 1; /* Flexible width */
+  min-width: 250px; /* Ensure minimum width */
+  min-height: 400px; /* Minimum height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px; /* Space between cores */
+  background-color: #f1f8e9; /* Light green for better distinction */
 }
 
-.cpu-core {
-  margin: 10px 0;
+.core h3 {
+  margin-bottom: 10px;
+  color: #00796b;
 }
 
-.cpu-bar {
-  height: 20px;
-  background-color: #8884d8; /* Bar color */
+/* Process ball styling */
+.process {
+  display: inline-block;
+  position: relative;
+  border-radius: 50%;
+  margin: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow for a 3D effect */
+}
+
+/* Tooltip on hover */
+.process:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Add dynamic sizing based on number of balls */
+.cores-container .core {
+  height: auto;
 }

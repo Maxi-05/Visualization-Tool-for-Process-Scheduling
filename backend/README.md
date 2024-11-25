@@ -24,3 +24,9 @@ pip install psutil
 ```bash
 python3 app.py
 ```
+
+## Viewing the information
+In the url navigate to the following url to view respective information
+1. `http://127.0.0.1:5000/` - Home page
+2. `http://127.0.0.1:5000/task1` - `cpu_data`
+3. `http://127.0.0.1:5000/task2` - `cpu_times`

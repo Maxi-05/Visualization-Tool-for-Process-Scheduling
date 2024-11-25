@@ -5,7 +5,7 @@ import '../App.css';
 function Plot1({ processes }) {
   return (
     <div className="processes">
-        <h2>Processes</h2>
+        <h2>CPU Usage</h2>
         <BarChart
         width={600}
         height={300}
