@@ -3,7 +3,8 @@ import './App.css';
 import { io } from "socket.io-client";
 import Plot1 from './components/Plot1';
 import Plot2 from './components/Plot2';
-import Plot3 from './components/Plot3'
+import Plot3 from './components/Plot3';
+import Plot6 from './components/Plot6';
 
 function App() {
   const [processes, setProcesses] = useState([]);
@@ -42,6 +43,9 @@ function App() {
         <div style={{ width: '100%', overflow: 'auto' }}>
           <Plot3 />
         </div>
+    </div>
+    <div style={{ width: '100%', overflow: 'auto' }}>
+      <Plot6/>
     </div>
 
         </main>

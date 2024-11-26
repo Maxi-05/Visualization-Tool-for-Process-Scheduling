@@ -1,39 +1,55 @@
 {
-    "processes": [
-        {
-            "id": 1,
-            "name": "Process 1",
-            "arrivalTime": 0,
-            "burstTime": 5,
-            "priority": 2
-        },
-        {
-            "id": 2,
-            "name": "Process 2",
-            "arrivalTime": 2,
-            "burstTime": 3,
-            "priority": 1
-        },
-        {
+    "redBlackTreeCFS": {
+        "root": {
             "id": 3,
             "name": "Process 3",
             "arrivalTime": 4,
             "burstTime": 1,
-            "priority": 3
-        },
-        {
-            "id": 4,
-            "name": "Process 4",
-            "arrivalTime": 6,
-            "burstTime": 7,
-            "priority": 2
-        },
-        {
-            "id": 5,
-            "name": "Process 5",
-            "arrivalTime": 8,
-            "burstTime": 2,
-            "priority": 1
+            "priority": 3,
+            "vruntime": 10,
+            "color": "black",
+            "left": {
+                "id": 1,
+                "name": "Process 1",
+                "arrivalTime": 0,
+                "burstTime": 5,
+                "priority": 2,
+                "vruntime": 20,
+                "color": "red",
+                "left": null,
+                "right": null
+            },
+            "right": {
+                "id": 4,
+                "name": "Process 4",
+                "arrivalTime": 6,
+                "burstTime": 7,
+                "priority": 2,
+                "vruntime": 15,
+                "color": "red",
+                "left": {
+                    "id": 2,
+                    "name": "Process 2",
+                    "arrivalTime": 2,
+                    "burstTime": 3,
+                    "priority": 1,
+                    "vruntime": 25,
+                    "color": "black",
+                    "left": null,
+                    "right": null
+                },
+                "right": {
+                    "id": 5,
+                    "name": "Process 5",
+                    "arrivalTime": 8,
+                    "burstTime": 2,
+                    "priority": 1,
+                    "vruntime": 30,
+                    "color": "black",
+                    "left": null,
+                    "right": null
+                }
+            }
         }
-    ]
+    }
 }
