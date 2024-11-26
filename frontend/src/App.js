@@ -3,7 +3,8 @@ import './App.css';
 import { io } from "socket.io-client";
 import Plot1 from './components/Plot1';
 import Plot2 from './components/Plot2';
-import Plot3 from './components/Plot3'
+import Plot3 from './components/Plot3';
+import Plot6 from './components/Plot6';
 
 function App() {
   const [processes, setProcesses] = useState([]);
@@ -30,17 +31,23 @@ function App() {
         <h1>Process Scheduling Visualization Tool</h1>
       </header>
       <main style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
-      <div style={{ flex: '1 1 100%', maxWidth: '500px', minWidth: '300px' }}>
-        <Plot1 processes={processes} />
-      </div>
-      <div style={{ flex: '1 1 100%', maxWidth: '500px', minWidth: '300px' }}>
-        <Plot2 processes={processes} />
-      </div>
-      <div style={{ flex: '1 1 100%', maxWidth: '500px', minWidth: '300px' }}>
-        <Plot3 />
-      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: "100%"}}>
+      <div style={{ display: 'flex', width: '100%', gap: '20px'}}>
+          <div style={{ flex: 1, maxWidth: '100%' }}>
+            <Plot1 processes={processes} />
+          </div>
+          <div style={{ flex: 1, maxWidth: '100%' }}>
+            <Plot2 processes={processes} />
+          </div>
     </div>
+        <div style={{ width: '100%', overflow: 'auto' }}>
+          <Plot3 />
+        </div>
+    </div>
+    <div style={{ width: '100%', overflow: 'auto' }}>
+      <Plot6/>
+    </div>
+
         </main>
       <footer>
         <hr />
