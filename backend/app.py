@@ -103,6 +103,7 @@ def monitor_cpu():
 
 def get_core_times():
     global cpu_times_info
+    num_cores = psutil.cpu_count(logical=False)
     per_core_cpu_times = None
     while True:
         prev_per_core_cpu_times = per_core_cpu_times
@@ -117,13 +118,13 @@ def get_core_times():
             for i, cpu_time in enumerate(per_core_cpu_times):
                 cpu_times_info.append({
                     'core': i,
-                    'user_time': cpu_time.user - prev_per_core_cpu_times[i].user,
-                    'system_time': cpu_time.system - prev_per_core_cpu_times[i].system,
-                    'nice_time': cpu_time.nice - prev_per_core_cpu_times[i].nice,
-                    'irq_time': cpu_time.irq - prev_per_core_cpu_times[i].irq,
-                    'softirq_time': cpu_time.softirq - prev_per_core_cpu_times[i].softirq,
-                    'iowait_time': cpu_time.iowait - prev_per_core_cpu_times[i].iowait,
-                    'steal_time': cpu_time.steal - prev_per_core_cpu_times[i].steal,
+                    'user_time': (cpu_time.user - prev_per_core_cpu_times[i].user)*100,
+                    'system_time': (cpu_time.system - prev_per_core_cpu_times[i].system)*100,
+                    'nice_time': (cpu_time.nice - prev_per_core_cpu_times[i].nice)*100,
+                    'irq_time': (cpu_time.irq - prev_per_core_cpu_times[i].irq)*100,
+                    'softirq_time': (cpu_time.softirq - prev_per_core_cpu_times[i].softirq)*100,
+                    'iowait_time': (cpu_time.iowait - prev_per_core_cpu_times[i].iowait)*100,
+                    'steal_time': (cpu_time.steal - prev_per_core_cpu_times[i].steal)*100,
                 })
                 user_all += cpu_times_info[-1]['user_time']
                 system_all += cpu_times_info[-1]['system_time']
@@ -134,13 +135,13 @@ def get_core_times():
                 steal_all += cpu_times_info[-1]['steal_time']
             cpu_times_info.append({
                 'core': 'all',
-                'user_time': user_all,
-                'system_time': system_all,
-                'nice_time': nice_all,
-                'irq_time': irq_all,
-                'softirq_time': softirq_all,
-                'iowait_time': iowait_all,
-                'steal_time': steal_all,
+                'user_time': (user_all/num_cores),
+                'system_time': (system_all/num_cores),
+                'nice_time': (nice_all/num_cores),
+                'irq_time': (irq_all/num_cores),
+                'softirq_time': (softirq_all/num_cores),
+                'iowait_time': (iowait_all/num_cores),
+                'steal_time': (steal_all/num_cores),
             })
         #Emits the data to the client
         socketio.emit('cpu_times', cpu_times_info)
