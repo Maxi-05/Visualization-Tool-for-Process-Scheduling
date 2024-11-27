@@ -169,7 +169,7 @@ def on_disconnect():
 if __name__ == '__main__':
     threading.Thread(target=monitor_cpu, daemon=True).start()
     threading.Thread(target=get_core_times, daemon=True).start()
-    
+
     # Change port to avoid conflicts and handle exceptions gracefully.
     try:
         socketio.run(app, host='0.0.0.0', port=5000)

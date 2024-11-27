@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "chart.js": "^4.4.6",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-organizational-chart": "^2.2.1"
+  }
+}

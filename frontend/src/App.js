@@ -5,6 +5,7 @@ import Plot1 from './components/Plot1';
 import Plot2 from './components/Plot2';
 import Plot3 from './components/Plot3';
 import Plot6 from './components/Plot6';
+import Plot4 from './components/Plot4'; // Import Plot4 instead of CPUUsageGraph
 
 function App() {
   const [processes, setProcesses] = useState([]);
@@ -31,24 +32,26 @@ function App() {
         <h1>Process Scheduling Visualization Tool</h1>
       </header>
       <main style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: "100%"}}>
-      <div style={{ display: 'flex', width: '100%', gap: '20px'}}>
-          <div style={{ flex: 1, maxWidth: '100%' }}>
-            <Plot1 processes={processes} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: "100%" }}>
+          <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
+            <div style={{ flex: 1, maxWidth: '100%' }}>
+              <Plot1 processes={processes} />
+            </div>
+            <div style={{ flex: 1, maxWidth: '100%' }}>
+              <Plot2 processes={processes} />
+            </div>
           </div>
-          <div style={{ flex: 1, maxWidth: '100%' }}>
-            <Plot2 processes={processes} />
+          <div style={{ width: '100%', overflow: 'auto' }}>
+            <Plot3 />
           </div>
-    </div>
-        <div style={{ width: '100%', overflow: 'auto' }}>
-          <Plot3 />
         </div>
-    </div>
-    <div style={{ width: '100%', overflow: 'auto' }}>
-      <Plot6/>
-    </div>
-
-        </main>
+        <div style={{ width: '100%', overflow: 'auto' }}>
+          <Plot6 />
+        </div>
+        <div style={{ width: '100%', overflow: 'auto' }}>
+          <Plot4 />
+        </div>
+      </main>
       <footer>
         <hr />
         <h3>Developed By</h3>
