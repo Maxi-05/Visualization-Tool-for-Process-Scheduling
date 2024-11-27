@@ -38,18 +38,20 @@ function App() {
               <Plot1 processes={processes} />
             </div>
             <div style={{ flex: 1, maxWidth: '100%' }}>
-              <Plot2 processes={processes} />
+              <Plot4 />
             </div>
           </div>
           <div style={{ width: '100%', overflow: 'auto' }}>
             <Plot3 />
           </div>
-        </div>
-        <div style={{ width: '100%', overflow: 'auto' }}>
+          <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
+          <div style={{ width: '100%', overflow: 'auto' }}>
           <Plot6 />
         </div>
         <div style={{ width: '100%', overflow: 'auto' }}>
-          <Plot4 />
+        <Plot2 processes={processes} />
+        </div>
+        </div>
         </div>
       </main>
       <footer>

@@ -47,7 +47,6 @@ function Plot2({ processes }) {
         display: true,
         color: "white", // PID label color
         align: "center",
-        formatter: () => `PID: ${pid}`,
       },
     })),
   };

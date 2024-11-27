@@ -107,7 +107,7 @@ const Plot4 = () => {
   };
 
   return (
-    <div>
+    <div style={{height:"300px"}}> 
       <h1>CPU Usage Graph</h1>
       {cpuData.length === 0 ? (
         <p>Loading data...</p>
