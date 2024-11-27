@@ -107,8 +107,42 @@ We are using the socket framework to establish communication between the fronten
 The plot shows the top 5 high-load processes in the system. The x-axis represents the process ID, and the y-axis represents the \% CPU load of the process. The plot shows the CPU load at two different instances of the time. The plot is updated in real-time, so the user can see the CPU load of the top 5 high-load processes as it changes over time.
 
 \subsubsection{Frontend Implementation}
+\begin{minted}{javascript}
+    import React from 'react';
+    import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+    import '../App.css';
+
+    function Plot1({ processes }) {
+    return (
+        <div className="processes">
+            <h2>CPU Usage</h2>
+            <BarChart
+            width={600}
+            height={300}
+            data={processes}
+            margin={{
+                top: 5, right: 30, left: 20, bottom: 5,
+            }}
+            >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="cpu_percent" fill="#8884d8" />
+            </BarChart>
+        </div>
+    )
+    }
+
+    export default Plot1;
+\end{minted}
 \subsubsection{Backend Implementation}
+\begin{minted}{python}
+    import numpy as np
+\end{minted}
 \subsubsection{Data used for the plot}
+Mention what all data is used.
 \subsubsection{Challenges faced}
 \subsubsection{Uses of the plot}
 
