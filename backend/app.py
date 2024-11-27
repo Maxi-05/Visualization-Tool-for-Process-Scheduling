@@ -65,6 +65,23 @@ def task3():
         });
     </script>
     '''
+@app.route('/task4')
+def task4():
+    """
+    Debug route to display process state intervals.
+    """
+    return '''
+    <h1>Gantt Chart Data</h1>
+    <p>JSON data from socket.io will appear below:</p>
+    <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('process_states', function(data) {
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+    '''
 
 ### End of debugging
 
@@ -216,6 +233,78 @@ def track_cpu_migrations():
         time.sleep(SLEEP_INTERVAL)  # Avoid high CPU usage
         migration_data=[]
 
+process_states = {}  # Dictionary to store state intervals
+TIME_RANGE = 1  # User-defined time range in seconds
+SLEEP_INTERVAL1 = 0.1  # Sampling interval
+
+def monitor_process_states():
+    """
+    Monitor process state transitions and ensure durations match the time range.
+    """
+    global process_states, TIME_RANGE
+
+    while True:
+        current_time = time.time()  # Current timestamp
+        start_time = current_time - TIME_RANGE  # Lower bound of time range
+
+        for proc in psutil.process_iter(attrs=['pid', 'name', 'status', 'cpu_percent']):
+            try:
+                pid = proc.info['pid']
+                state = proc.info['status']
+                cpu_usage = proc.info['cpu_percent']
+
+                # Initialize process entry if not present
+                if pid not in process_states:
+                    process_states[pid] = {
+                        'name': proc.info['name'],
+                        'states': []
+                    }
+
+                # Get the last recorded state for the process
+                states = process_states[pid]['states']
+                if states and states[-1]['state'] == state:
+                    # Update the end time of the current state, capped at current_time
+                    states[-1]['end_time'] = min(current_time, start_time + TIME_RANGE)
+                    states[-1]['duration'] = states[-1]['end_time'] - states[-1]['start_time']
+                else:
+                    # Add a new state entry
+                    states.append({
+                        'state': state,
+                        'start_time': max(current_time, start_time),  # Ensure start_time is within range
+                        'end_time': current_time,
+                        'duration': 0  # Initial duration
+                    })
+
+                # Filter and truncate states to stay within the time range
+                process_states[pid]['states'] = [
+                    {
+                        **s,
+                        'start_time': max(s['start_time'], start_time),  # Adjust start_time if earlier
+                        'end_time': min(s['end_time'], start_time + TIME_RANGE),  # Adjust end_time if later
+                        'duration': min(s['end_time'], start_time + TIME_RANGE) - max(s['start_time'], start_time)
+                    }
+                    for s in states if s['end_time'] > start_time
+                ]
+
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+
+        # Remove entries for terminated processes outside the time range
+        process_states = {
+            pid: data for pid, data in process_states.items()
+            if any(s['end_time'] >= start_time for s in data['states'])
+        }
+        running_processes = {
+            pid: data for pid, data in process_states.items()
+            if any(s['state'] == psutil.STATUS_RUNNING for s in data['states'])
+        }
+
+        # Emit only running processes
+        socketio.emit('process_states', running_processes)
+        # Emit the state data for Gantt chart
+        # socketio.emit('process_states', process_states)
+
+        time.sleep(SLEEP_INTERVAL1)  # Frequent polling
 
 
 @app.route('/')
@@ -237,6 +326,7 @@ if __name__ == '__main__':
     threading.Thread(target=monitor_cpu, daemon=True).start()
     threading.Thread(target=get_core_times, daemon=True).start()
     threading.Thread(target=track_cpu_migrations, daemon=True).start()
+    threading.Thread(target=monitor_process_states, daemon=True).start()
 
     # Change port to avoid conflicts and handle exceptions gracefully.
     try:
