@@ -83,7 +83,7 @@
 /* Move-up animation */
 @keyframes moveUp {
   0% {
-    top: 500px; /* Start below the container */
+    top: 600px; /* Start below the container */
   }
   100% {
     top: 0px; /* Enter into the container */

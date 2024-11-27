@@ -5,10 +5,12 @@ import Plot1 from './components/Plot1';
 import Plot2 from './components/Plot2';
 import Plot3 from './components/Plot3';
 import Plot6 from './components/Plot6';
-import Plot4 from './components/Plot4'; // Import Plot4 instead of CPUUsageGraph
+import Plot4 from './components/Plot4';
+import Plot5 from './components/Plot5';
 
 function App() {
   const [processes, setProcesses] = useState([]);
+  const [processStates, setProcessStates] = useState({});
 
   useEffect(() => {
     // Connect to the Flask Socket.IO server
@@ -18,6 +20,11 @@ function App() {
     socket.on('cpu_data', (data) => {
       console.log('Received CPU data:', data);
       setProcesses(data);
+    });
+
+    socket.on('process_states', (data) => {
+      console.log('Received process states:', data);
+      setProcessStates(data);
     });
 
     // Cleanup on component unmount
@@ -35,7 +42,7 @@ function App() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: "100%" }}>
           <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
             <div style={{ flex: 1, maxWidth: '100%' }}>
-              <Plot1 processes={processes} />
+              <Plot1 processes={ processes } />
             </div>
             <div style={{ flex: 1, maxWidth: '100%' }}>
               <Plot4 />
@@ -47,9 +54,10 @@ function App() {
           <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
           <div style={{ width: '100%', overflow: 'auto' }}>
           <Plot6 />
+          <Plot5 processStates = { processStates }/>
         </div>
         <div style={{ width: '100%', overflow: 'auto' }}>
-        <Plot2 processes={processes} />
+        <Plot2 processes={ processes } />
         </div>
         </div>
         </div>

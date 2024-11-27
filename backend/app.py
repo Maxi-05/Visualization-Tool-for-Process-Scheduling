@@ -135,6 +135,7 @@ def monitor_cpu():
         update_process_data()
         socketio.emit('cpu_data', process_data)  # Emit updated data to all clients
         time.sleep(SLEEP_INTERVAL)
+        process_data = [proc for proc in process_data if proc['pid'] not in killed_processes]
 
 def get_core_times():
     global cpu_times_info

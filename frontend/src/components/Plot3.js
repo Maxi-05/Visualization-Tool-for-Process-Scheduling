@@ -68,7 +68,7 @@ const Plot3 = () => {
         const updatedProcesses = { ...prev };
 
         data.forEach((process) => {
-          const { pid, to_core, cpu_percent } = process;
+          const { pid, to_core, cpu_percent, name } = process;
           const prevProcess = updatedProcesses[pid];
 
           if (prevProcess && prevProcess.core !== to_core) {
@@ -101,6 +101,7 @@ const Plot3 = () => {
               pid,
               core: to_core,
               cpu_percent,
+              name,
             };
 
             // Update process order
@@ -128,44 +129,86 @@ const Plot3 = () => {
           <div key={core} className="core-with-connection">
             <div className="vertical-connection"></div>
             <div className="container">
-              {Object.values(processes)
-                .filter((process) => process.core === core || animations[process.pid]?.fromCore === core)
-                .map((process) => {
-                  const color = getProcessColor(process.pid);
-                  const radius = Math.sqrt(process.cpu_percent || 1) * 10;
+              {[
+                // Move-down animations first
+                ...Object.values(processes)
+                  .filter((process) => animations[process.pid]?.fromCore === core)
+                  .map((process) => {
+                    const color = getProcessColor(process.pid);
+                    const radius = Math.sqrt(process.cpu_percent || 1) * 10;
 
-                  const staticPosition = getStaticPosition(process.pid, radius);
+                    return (
+                      <div
+                        key={`${process.pid}-down`}
+                        className="process-disc move-down"
+                        style={{
+                          backgroundColor: color,
+                          width: `${radius}px`,
+                          height: `${radius}px`,
+                          color: "white",
+                          fontSize: `${radius / 6}px`,
+                        }}
+                      >
+                        {radius > 20 ? process.name : ""}
+                      </div>
+                    );
+                  }),
+                // Move-up animations second
+                ...Object.values(processes)
+                  .filter(
+                    (process) =>
+                      (process.core === core ||
+                        animations[process.pid]?.toCore === core) &&
+                      !animations[process.pid] // Exclude animated processes
+                  )
+                  .map((process) => {
+                    const color = getProcessColor(process.pid);
+                    const radius = Math.sqrt(process.cpu_percent || 1) * 10;
 
-                  // Determine animation class
-                  let animationClass = "";
-                  let top = staticPosition.top;
-                  let left = staticPosition.left;
+                    const staticPosition = getStaticPosition(process.pid, radius);
 
-                  const animation = animations[process.pid];
-                  if (animation) {
-                    if (animation.fromCore === core) {
-                      animationClass = "move-down";
-                      top = undefined; // Let animation control the position
-                    } else if (animation.toCore === core) {
-                      animationClass = "move-up";
-                      top = undefined; // Let animation control the position
-                    }
-                  }
+                    return (
+                      <div
+                        key={process.pid}
+                        className="process-disc"
+                        style={{
+                          backgroundColor: color,
+                          width: `${radius}px`,
+                          height: `${radius}px`,
+                          top: `${staticPosition.top}px`,
+                          left: `${staticPosition.left}px`,
+                          color: "white",
+                          fontSize: `${radius / 6}px`,
+                        }}
+                      >
+                        {radius > 20 ? process.name : ""}
+                      </div>
+                    );
+                  }),
+                // Ensure only animations to this core are shown
+                ...Object.values(processes)
+                  .filter((process) => animations[process.pid]?.toCore === core)
+                  .map((process) => {
+                    const color = getProcessColor(process.pid);
+                    const radius = Math.sqrt(process.cpu_percent || 1) * 10;
 
-                  return (
-                    <div
-                      key={process.pid}
-                      className={`process-disc ${animationClass}`}
-                      style={{
-                        backgroundColor: color,
-                        width: `${radius}px`,
-                        height: `${radius}px`,
-                        top: top !== undefined ? `${top}px` : undefined,
-                        left: `${left}px`,
-                      }}
-                    ></div>
-                  );
-                })}
+                    return (
+                      <div
+                        key={`${process.pid}-up`}
+                        className="process-disc move-up"
+                        style={{
+                          backgroundColor: color,
+                          width: `${radius}px`,
+                          height: `${radius}px`,
+                          color: "white",
+                          fontSize: `${radius / 6}px`,
+                        }}
+                      >
+                        {radius > 20 ? process.name : ""}
+                      </div>
+                    );
+                  }),
+              ]}
             </div>
             <div className="core-label">Core {core}</div>
           </div>
