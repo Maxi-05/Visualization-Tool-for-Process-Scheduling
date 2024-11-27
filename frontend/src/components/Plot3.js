@@ -1,69 +1,179 @@
-import React, { useState, useEffect } from 'react';
-import '../App.css';
+import React, { useState, useEffect } from "react";
+import socketIOClient from "socket.io-client";
+import "./Plot3.css";
 
-const COLORS = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'pink', 'brown', 'cyan', 'lime'];
+const SOCKET_URL = "http://127.0.0.1:5000";
 
-// Function to generate fixed processes with unique colors
-const generateProcesses = (numProcesses) => {
-  return Array.from({ length: numProcesses }, (_, i) => ({
-    id: `process${i + 1}`,
-    color: COLORS[i % COLORS.length], // Ensure unique color for each process
-    cpuUsage: 0, // Initial CPU usage
-    core: Math.floor(Math.random() * 4) + 1, // Randomly assign to a core
-  }));
-};
+const Plot3 = () => {
+  const cores = [0, 1, 2, 3, 4, 5];
+  const [processes, setProcesses] = useState({});
+  const [processOrder, setProcessOrder] = useState([]); // Track process addition order
+  const [processColors, setProcessColors] = useState({});
+  const [animations, setAnimations] = useState({});
+  const [staticPositions, setStaticPositions] = useState({});
 
-// Function to update only CPU usage and core dynamically
-const updateProcesses = (processes) => {
-  return processes.map((process) => ({
-    ...process,
-    cpuUsage: Math.floor(Math.random() * 100) + 1, // Random CPU usage
-    core: Math.floor(Math.random() * 4) + 1, // Randomly assign to a core
-  }));
-};
+  // Assign a unique color to each process based on its pid
+  const getProcessColor = (pid) => {
+    if (!processColors[pid]) {
+      const hue = (pid * 137.5) % 360;
+      const color = `hsl(${hue}, 70%, 60%)`;
+      setProcessColors((prev) => ({ ...prev, [pid]: color }));
+    }
+    return processColors[pid];
+  };
 
-function Plot3() {
-  const [processes, setProcesses] = useState(generateProcesses(10)); // Generate 10 processes
+  // Generate or get static position for non-migrating processes
+  const getStaticPosition = (pid, radius) => {
+    if (!staticPositions[pid]) {
+      const containerWidth = 150;
+      const containerHeight = 200;
+      const top = Math.random() * (containerHeight - radius);
+      const left = Math.random() * (containerWidth - radius);
+      setStaticPositions((prev) => ({
+        ...prev,
+        [pid]: { top, left },
+      }));
+      return { top, left };
+    }
+    return staticPositions[pid];
+  };
 
+  // Prune old processes when exceeding limit
+  const pruneOldProcesses = (updatedProcesses) => {
+    const processKeys = Object.keys(updatedProcesses);
+
+    if (processKeys.length > 20) {
+      const excessCount = processKeys.length - 20;
+
+      setProcessOrder((prevOrder) => {
+        const toRemove = prevOrder.slice(0, excessCount);
+        const newOrder = prevOrder.slice(excessCount);
+
+        // Remove old processes from `processes`
+        toRemove.forEach((pid) => {
+          delete updatedProcesses[pid];
+        });
+
+        return newOrder;
+      });
+    }
+  };
+
+  // Socket connection to get the process data
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProcesses((prevProcesses) => updateProcesses(prevProcesses));
-    }, 2000); // Update every 2 seconds
-    return () => clearInterval(interval);
+    const socket = socketIOClient(SOCKET_URL);
+
+    socket.on("cpu_migrations", (data) => {
+      setProcesses((prev) => {
+        const updatedProcesses = { ...prev };
+
+        data.forEach((process) => {
+          const { pid, to_core, cpu_percent } = process;
+          const prevProcess = updatedProcesses[pid];
+
+          if (prevProcess && prevProcess.core !== to_core) {
+            setAnimations((prevAnimations) => ({
+              ...prevAnimations,
+              [pid]: {
+                fromCore: prevProcess.core,
+                toCore: to_core,
+              },
+            }));
+
+            // Delay updating the core until after the animation
+            setTimeout(() => {
+              setProcesses((finalProcesses) => ({
+                ...finalProcesses,
+                [pid]: {
+                  ...finalProcesses[pid],
+                  core: to_core,
+                },
+              }));
+              setAnimations((prev) => {
+                const updated = { ...prev };
+                delete updated[pid];
+                return updated;
+              });
+            }, 800); // Match animation duration
+          } else {
+            updatedProcesses[pid] = {
+              ...prevProcess,
+              pid,
+              core: to_core,
+              cpu_percent,
+            };
+
+            // Update process order
+            setProcessOrder((prevOrder) => {
+              if (!prevOrder.includes(pid)) {
+                return [...prevOrder, pid];
+              }
+              return prevOrder;
+            });
+          }
+        });
+
+        pruneOldProcesses(updatedProcesses);
+        return updatedProcesses;
+      });
+    });
+
+    return () => socket.disconnect();
   }, []);
 
   return (
-    <div className="container">
-      <h1>Process Migration Visualization</h1>
-      <div className="cores-container">
-        {[1, 2, 3, 4].map((core) => (
-          <div key={core} className="core">
-            <h3>Core {core}</h3>
-            <div className="processes">
-              {processes
-                .filter((process) => process.core === core)
+    <div className="plot3-container">
+      <div className="containers">
+        {cores.map((core) => (
+          <div key={core} className="core-with-connection">
+            <div className="vertical-connection"></div>
+            <div className="container">
+              {Object.values(processes)
+                .filter((process) => process.core === core || animations[process.pid]?.fromCore === core)
                 .map((process) => {
-                  // Compute size proportional to CPU usage (Area ∝ CPU)
-                  const size = Math.sqrt(process.cpuUsage) * 10;
+                  const color = getProcessColor(process.pid);
+                  const radius = Math.sqrt(process.cpu_percent || 1) * 10;
+
+                  const staticPosition = getStaticPosition(process.pid, radius);
+
+                  // Determine animation class
+                  let animationClass = "";
+                  let top = staticPosition.top;
+                  let left = staticPosition.left;
+
+                  const animation = animations[process.pid];
+                  if (animation) {
+                    if (animation.fromCore === core) {
+                      animationClass = "move-down";
+                      top = undefined; // Let animation control the position
+                    } else if (animation.toCore === core) {
+                      animationClass = "move-up";
+                      top = undefined; // Let animation control the position
+                    }
+                  }
+
                   return (
                     <div
-                      key={process.id}
-                      className="process"
+                      key={process.pid}
+                      className={`process-disc ${animationClass}`}
                       style={{
-                        backgroundColor: process.color,
-                        width: `${size}px`,
-                        height: `${size}px`,
+                        backgroundColor: color,
+                        width: `${radius}px`,
+                        height: `${radius}px`,
+                        top: top !== undefined ? `${top}px` : undefined,
+                        left: `${left}px`,
                       }}
-                      title={`ID: ${process.id}, CPU: ${process.cpuUsage}%`}
                     ></div>
                   );
                 })}
             </div>
+            <div className="core-label">Core {core}</div>
           </div>
         ))}
       </div>
+      <div className="horizontal-pipe"></div>
     </div>
   );
-}
+};
 
 export default Plot3;

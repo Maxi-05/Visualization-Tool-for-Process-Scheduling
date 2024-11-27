@@ -27,56 +27,105 @@ const Plot4 = () => {
     };
   }, []);
 
+  const aggregateOverallData = (data) => {
+    const aggregatedData = {
+      user_time: 0,
+      system_time: 0,
+      nice_time: 0,
+      irq_time: 0,
+      softirq_time: 0,
+      iowait_time: 0,
+    };
+
+    // Aggregate data for 'Overall' core by summing up all individual core data
+    data.forEach(item => {
+      if (item.core !== 'all') {
+        aggregatedData.user_time += item.user_time || 0;
+        aggregatedData.system_time += item.system_time || 0;
+        aggregatedData.nice_time += item.nice_time || 0;
+        aggregatedData.irq_time += item.irq_time || 0;
+        aggregatedData.softirq_time += item.softirq_time || 0;
+        aggregatedData.iowait_time += item.iowait_time || 0;
+      }
+    });
+
+    return aggregatedData;
+  };
+
   const generateChartData = () => {
     if (cpuData.length === 0) {
       return {};  // Return empty if no data
     }
 
+    // Aggregate the data for the "Overall" core
+    const overallData = aggregateOverallData(cpuData);
+
     // Extract labels dynamically (using core names or 'Overall' for aggregation)
     const labels = cpuData.map(item => (item.core === 'all' ? 'Overall' : `Core ${item.core}`));
 
+    // Add "Overall" data to the labels and data arrays
+    labels.push('Overall');
+    
     // Build the chart data structure
     const chartData = {
       labels: labels,
       datasets: [
         {
           label: 'User Time',
-          data: cpuData.map(item => item.user_time || 0), // Default to 0 if data is missing
+          data: [
+            ...cpuData.map(item => item.user_time || 0),
+            overallData.user_time, // Add "Overall" data
+          ],
           borderColor: 'green',
           backgroundColor: 'rgba(0, 255, 0, 0.2)',
           fill: true,
         },
         {
           label: 'System Time',
-          data: cpuData.map(item => item.system_time || 0),
+          data: [
+            ...cpuData.map(item => item.system_time || 0),
+            overallData.system_time, // Add "Overall" data
+          ],
           borderColor: 'red',
           backgroundColor: 'rgba(255, 0, 0, 0.2)',
           fill: true,
         },
         {
           label: 'Nice Time',
-          data: cpuData.map(item => item.nice_time || 0),
+          data: [
+            ...cpuData.map(item => item.nice_time || 0),
+            overallData.nice_time, // Add "Overall" data
+          ],
           borderColor: 'blue',
           backgroundColor: 'rgba(0, 0, 255, 0.2)',
           fill: true,
         },
         {
           label: 'IRQ Time',
-          data: cpuData.map(item => item.irq_time || 0),
+          data: [
+            ...cpuData.map(item => item.irq_time || 0),
+            overallData.irq_time, // Add "Overall" data
+          ],
           borderColor: 'orange',
           backgroundColor: 'rgba(255, 165, 0, 0.2)',
           fill: true,
         },
         {
           label: 'Soft IRQ Time',
-          data: cpuData.map(item => item.softirq_time || 0),
+          data: [
+            ...cpuData.map(item => item.softirq_time || 0),
+            overallData.softirq_time, // Add "Overall" data
+          ],
           borderColor: 'magenta',
           backgroundColor: 'rgba(255, 0, 255, 0.2)',
           fill: true,
         },
         {
           label: 'I/O Wait Time',
-          data: cpuData.map(item => item.iowait_time || 0),
+          data: [
+            ...cpuData.map(item => item.iowait_time || 0),
+            overallData.iowait_time, // Add "Overall" data
+          ],
           borderColor: 'grey',
           backgroundColor: 'rgba(169, 169, 169, 0.2)',
           fill: true,
@@ -107,7 +156,7 @@ const Plot4 = () => {
   };
 
   return (
-    <div style={{height:"300px"}}> 
+    <div>
       <h1>CPU Usage Graph</h1>
       {cpuData.length === 0 ? (
         <p>Loading data...</p>
