@@ -19,6 +19,9 @@ killed_processes = set()  # Track processes that have been terminated
 # Global declarations for cpu times
 cpu_times_info = []
 
+migration_data = []  # Global list to store core migration data
+core_affinity_state = {}  # Dictionary to track the previous core affinity of processes
+
 ### Print the data for debugging
 @app.route('/task1')
 def task1():
@@ -48,6 +51,21 @@ def task2():
         });
     </script>
     '''
+@app.route('/task3')
+def task3():
+    return '''
+    <h1>CPU Migrations Tracker</h1>
+    <p>CPU migration data will appear below:</p>
+    <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('cpu_migrations', function(data) {
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+    '''
+
 ### End of debugging
 
 def get_current_time():
@@ -149,6 +167,55 @@ def get_core_times():
         cpu_times_info = []
 
 
+def track_cpu_migrations():
+    """
+    Continuously monitor processes for CPU core migrations and emit the data.
+    """
+    global core_affinity_state, migration_data
+
+    while True:
+        try:
+            for proc in psutil.process_iter(['pid', 'name','cpu_percent']):
+                pid = proc.info['pid']
+                name = proc.info['name']
+                cpu_percent=proc.info['cpu_percent']
+                try:
+                    # Read the current CPU/core the process is running on
+                    with open(f"/proc/{pid}/stat", "r") as stat_file:
+                        stat_data = stat_file.read().split()
+                        current_cpu = int(stat_data[38])  # 39th value (index 38) is the CPU number
+                except (FileNotFoundError, psutil.AccessDenied, IndexError):
+                    # Process might have terminated or access denied
+                    continue
+                except psutil.NoSuchProcess:
+                    # Remove process from tracking if it no longer exists
+                    if pid in core_affinity_state:
+                        del core_affinity_state[pid]
+                    continue
+
+                # Check if the process has a previous CPU core recorded
+                if pid in core_affinity_state:
+                    previous_cpu = core_affinity_state[pid]
+                    if previous_cpu != current_cpu:
+                        # Log the migration
+                        migration_entry = {
+                            'pid': pid,
+                            'name': name,
+                            'cpu_percent': cpu_percent,
+                            'from_core': previous_cpu,
+                            'to_core': current_cpu,
+                        }
+                        migration_data.append(migration_entry)
+
+                # Update the tracked core state
+                core_affinity_state[pid] = current_cpu
+
+        except Exception as e:
+            print(f"Error tracking CPU migrations: {e}")
+        socketio.emit('cpu_migrations', migration_data)  # Send to clients
+        time.sleep(SLEEP_INTERVAL)  # Avoid high CPU usage
+        migration_data=[]
+
 
 
 @app.route('/')
@@ -169,6 +236,7 @@ def on_disconnect():
 if __name__ == '__main__':
     threading.Thread(target=monitor_cpu, daemon=True).start()
     threading.Thread(target=get_core_times, daemon=True).start()
+    threading.Thread(target=track_cpu_migrations, daemon=True).start()
 
     # Change port to avoid conflicts and handle exceptions gracefully.
     try:
