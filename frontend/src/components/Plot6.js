@@ -1,132 +1,75 @@
-import React from 'react';
-import { Tree, TreeNode } from 'react-organizational-chart';
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import Tree from "react-d3-tree";
 
+const Plot6 = () => {
+  const [treeData, setTreeData] = useState(null);
 
-const data = {
-    redBlackTreeCFS: {
-        root: {
-            id: 3,
-            name: "Process 3",
-            arrivalTime: 4,
-            burstTime: 1,
-            priority: 3,
-            vruntime: 10,
-            color: "black",
-            left: {
-                id: 1,
-                name: "Process 1",
-                arrivalTime: 0,
-                burstTime: 5,
-                priority: 2,
-                vruntime: 20,
-                color: "red",
-                left: null,
-                right: null
-            },
-            right: {
-                id: 4,
-                name: "Process 4",
-                arrivalTime: 6,
-                burstTime: 7,
-                priority: 2,
-                vruntime: 15,
-                color: "red",
-                left: {
-                    id: 2,
-                    name: "Process 2",
-                    arrivalTime: 2,
-                    burstTime: 3,
-                    priority: 1,
-                    vruntime: 25,
-                    color: "black",
-                    left: null,
-                    right: null
-                },
-                right: {
-                    id: 5,
-                    name: "Process 5",
-                    arrivalTime: 8,
-                    burstTime: 2,
-                    priority: 1,
-                    vruntime: 30,
-                    color: "black",
-                    left: null,
-                    right: null
-                }
-            }
-        }
-    }
-};
+  // Socket.IO client connection
+  useEffect(() => {
+    const socket = io("http://localhost:5000"); // Replace with your backend's URL
 
-const renderTree = (node) => {
+    socket.on("tree_data", (data) => {
+      if (data && data.root) {
+        setTreeData(formatTreeData(data.root));
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // Convert the backend tree structure to a format suitable for react-d3-tree
+  const formatTreeData = (node) => {
     if (!node) return null;
+    return {
+      name: `${node.name} (${node.pid})`,
+      attributes: {
+        vruntime: node.vruntime,
+        color: node.color,
+      },
+      children: [formatTreeData(node.left), formatTreeData(node.right)].filter(
+        (child) => child !== null
+      ),
+    };
+  };
 
-    return (
-        <TreeNode
-            label={
-                <div
-                    style={{
-                        color: 'white',
-                        padding: '10px',
-                        border: '2px solid #ccc',
-                        borderRadius: '50%',
-                        backgroundColor: node.color,
-                        width: '60px',
-                        height: '60px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Added shadow for depth
-                        transition: 'transform 0.2s', // Smooth transition for hover effect
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'} // Scale on hover
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'} // Reset scale
-                >
-                    {node.id}
-                </div>
-            }
-        >
-            <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-                {node.left && renderTree(node.left)}
-                {node.right && renderTree(node.right)}
-            </div>
-        </TreeNode>
-    );
+  // Render the tree
+  return (
+    <div style={{ width: "100%", height: "500px" }}>
+      {treeData ? (
+        <Tree
+          data={treeData}
+          orientation="vertical"
+          pathFunc="straight"
+          nodeSvgShape={{
+            shape: "circle",
+            shapeProps: {
+              r: 10,
+              fill: "black",
+            },
+          }}
+          styles={{
+            nodes: {
+              node: {
+                circle: { fill: "black" },
+                name: { fill: "white" },
+                attributes: { fill: "lightgray" },
+              },
+              leafNode: {
+                circle: { fill: "red" },
+                name: { fill: "white" },
+                attributes: { fill: "lightgray" },
+              },
+            },
+          }}
+        />
+      ) : (
+        <p>Loading tree data...</p>
+      )}
+    </div>
+  );
 };
-
-function Plot6() {
-    return (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}> {/* Added padding around the tree */}
-            <Tree
-                lineWidth={'3px'} // Thicker lines for better visibility
-                lineColor={'#4CAF50'} // Changed line color to a pleasant green
-                lineBorderRadius={'10px'}
-                label={
-                    <div
-                        style={{
-                            color: 'white',
-                            padding: '10px',
-                            border: '2px solid #ccc',
-                            borderRadius: '50%',
-                            backgroundColor: data.redBlackTreeCFS.root.color,
-                            width: '60px',
-                            height: '60px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Added shadow for depth
-                        }}
-                    >
-                        {data.redBlackTreeCFS.root.id}
-                    </div>
-                }
-            >
-                {renderTree(data.redBlackTreeCFS.root.left)}
-                {renderTree(data.redBlackTreeCFS.root.right)}
-            </Tree>
-        </div>
-    );
-}
-
 
 export default Plot6;

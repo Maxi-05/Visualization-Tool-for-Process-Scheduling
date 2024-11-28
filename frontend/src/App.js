@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { io } from "socket.io-client";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Plot1 from './components/Plot1';
 import Plot2 from './components/Plot2';
 import Plot3 from './components/Plot3';
@@ -34,58 +35,75 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header>
-        <h1>Process Scheduling Visualization Tool</h1>
-      </header>
-      <main style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: "100%" }}>
-          <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
-            <div style={{ flex: 1, maxWidth: '100%' }}>
-              <Plot1 processes={ processes } />
+    <Router>
+      <div className="App">
+        <header>
+          <h1>Process Scheduling Visualization Tool</h1>
+          <nav>
+            <Link to="/">Home</Link>
+            {" | "}
+            <Link to="/tree">View Full Tree</Link>
+          </nav>
+        </header>
+        <main>
+          <Routes>
+            {/* Default Layout */}
+            <Route
+              path="/"
+              element={
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: "100%" }}>
+                  <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
+                    <div style={{ flex: 1, maxWidth: '100%' }}>
+                      <Plot1 processes={processes} />
+                    </div>
+                    <div style={{ flex: 1, maxWidth: '100%' }}>
+                      <Plot4 />
+                    </div>
+                  </div>
+                  <div style={{ width: '100%', overflow: 'auto' }}>
+                    <Plot3 />
+                  </div>
+                  <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
+                    <div style={{ width: '100%', overflow: 'auto' }}>
+                      <Plot5 processStates={processStates} />
+                    </div>
+                    <div style={{ width: '100%', overflow: 'auto' }}>
+                      <Plot2 processes={processes} />
+                    </div>
+                  </div>
+                </div>
+              }
+            />
+
+            {/* Separate Page for Full Tree */}
+            <Route path="/tree" element={<Plot6 />} />
+          </Routes>
+        </main>
+        <footer>
+          <hr />
+          <h3>Developed By</h3>
+          <hr />
+          <div className="footer-columns">
+            <div className="column" style={{ flex: 3 }}>
+              <p>Anjali Samudrala</p>
+              <p>Chaitanya Sai Teja G</p>
+              <p>Jwala Likitha Reddy M</p>
             </div>
-            <div style={{ flex: 1, maxWidth: '100%' }}>
-              <Plot4 />
+            <div className="column" style={{ flex: 4 }}>
+              <p>Karthikeya P</p>
+              <p>Naveen Koushik Reddy E</p>
+              <p>Navya Sree B</p>
+              <p>Rushi Babu G</p>
+            </div>
+            <div className="column" style={{ flex: 3 }}>
+              <p>Sravya Rangu</p>
+              <p>Yashwanth Sai P</p>
+              <p>Yaswanth Sai V</p>
             </div>
           </div>
-          <div style={{ width: '100%', overflow: 'auto' }}>
-            <Plot3 />
-          </div>
-          <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
-          <div style={{ width: '100%', overflow: 'auto' }}>
-          <Plot6 />
-          <Plot5 processStates = { processStates }/>
-        </div>
-        <div style={{ width: '100%', overflow: 'auto' }}>
-        <Plot2 processes={ processes } />
-        </div>
-        </div>
-        </div>
-      </main>
-      <footer>
-        <hr />
-        <h3>Developed By</h3>
-        <hr />
-        <div className="footer-columns">
-          <div className="column" style={{ flex: 3 }}>
-            <p>Anjali Samudrala</p>
-            <p>Chaitanya Sai Teja G</p>
-            <p>Jwala Likitha Reddy M</p>
-          </div>
-          <div className="column" style={{ flex: 4 }}>
-            <p>Karthikeya P</p>
-            <p>Naveen Koushik Reddy E</p>
-            <p>Navya Sree B</p>
-            <p>Rushi Babu G</p>
-          </div>
-          <div className="column" style={{ flex: 3 }}>
-            <p>Sravya Rangu</p>
-            <p>Yashwanth Sai P</p>
-            <p>Yaswanth Sai V</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </Router>
   );
 }
 

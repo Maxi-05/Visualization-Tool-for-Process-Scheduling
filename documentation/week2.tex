@@ -103,13 +103,35 @@ We are using the socket framework to establish communication between the fronten
     \end{minipage}
     \caption{Top 5 High-Load Processes at different time instances}
 \end{figure}
+This plot shows the top 5 high-load processes in the system. The x-axis represents the process ID, and the y-axis represents the \% CPU load of the process. The plot shows the CPU load at two different instances of the time. The plot is updated in real-time, so the user can see the CPU load of the top 5 high-load processes as it changes over time.
 
-The plot shows the top 5 high-load processes in the system. The x-axis represents the process ID, and the y-axis represents the \% CPU load of the process. The plot shows the CPU load at two different instances of the time. The plot is updated in real-time, so the user can see the CPU load of the top 5 high-load processes as it changes over time.
+\subsection{PLOT THAT 6 SNAPSHOTS}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/plot2_1.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/plot2_2.png}
+    \end{minipage}
+    \caption{}
+\end{figure}
+
+This plot displays a real-time visualization of the activity of processes over multiple snapshots, represented by a stacked bar chart. Each bar in the chart corresponds to a snapshot of processes, showing whether each process (identified by its PID) was active at that moment. The chart uses distinct colors for each process, making it easy to track process activity over time. The x-axis represents different snapshots, while the y-axis shows the number of processes. This visualization helps in monitoring the system’s process behavior, observing trends, and identifying active or idle processes in real time.
+
+
+
 
 \subsubsection{Frontend Implementation}
-\begin{minted}{javascript}
+\begin{itemize}
+    \item PLOT1
+    \begin{minted}{javascript}
     import React from 'react';
-    import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+    import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 
+        'recharts';
     import '../App.css';
 
     function Plot1({ processes }) {
@@ -137,10 +159,917 @@ The plot shows the top 5 high-load processes in the system. The x-axis represent
 
     export default Plot1;
 \end{minted}
+
+This frontend implementation for visualizing CPU usage utilizes the \textbf{Recharts} library to create an interactive bar chart. The component \texttt{Plot1} is responsible for rendering the chart. It takes a \texttt{processes} prop, which contains the updated process data, and displays CPU usage for each process.
+
+
+
+\item PLOT2
+\begin{minted}{javascript}
+import React, { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels"; 
+// Import data labels plugin
+
+function Plot2({ processes }) {
+  const [queue, setQueue] = useState([]);
+  const [colorMap, setColorMap] = useState(new Map());
+
+  // Helper function to generate unique, divergent colors using HSL
+  const generateDistinctColor = (pid) => {
+    const hash = pid * 2654435761 % 360; 
+    // Deterministic hash using Knuth's multiplication
+    return `hsl(${hash}, 70%, 50%)`;
+  };
+
+  useEffect(() => {
+    if (processes.length > 0) {
+      setQueue((prevQueue) => {
+        const newQueue = [...prevQueue, processes];
+        if (newQueue.length > 6) newQueue.shift();
+        return newQueue;
+      });
+
+      setColorMap((prevColorMap) => {
+        const updatedMap = new Map(prevColorMap);
+        processes.forEach((process) => {
+          if (!updatedMap.has(process.pid)) {
+            updatedMap.set(process.pid, generateDistinctColor(process.pid));
+          }
+        });
+        return updatedMap;
+      });
+    }
+  }, [processes]);
+
+  // Prepare data for Chart.js
+  const chartData = {
+    labels: queue.map((_, index) => `Snapshot ${index}`),
+    datasets: Array.from(colorMap.keys()).map((pid) => ({
+      label: `PID: ${pid}`,
+      data: queue.map((snapshot) =>
+        snapshot.find((p) => p.pid === pid) ? 1 : 0
+      ),
+      backgroundColor: colorMap.get(pid),
+      borderWidth: 1,
+      datalabels: {
+        display: true,
+        color: "white", // PID label color
+        align: "center",
+      },
+    })),
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        color: "#fff",
+        formatter: (value, context) => {
+          // Show PID if the bar is active
+          const datasetIndex = context.datasetIndex;
+          const pid = chartData.datasets[datasetIndex].label.split(": ")[1];
+          return value > 0 ? `PID: ${pid}` : "";
+        },
+        anchor: "center",
+        align: "center",
+        clip: true,
+      },
+      legend: {
+        display: false, // Disable the legend completely
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        categoryPercentage: 0.01, // Reduce spacing between categories
+      },
+      y: {
+        beginAtZero: true,
+        stacked: true,
+        title: {
+          display: true,
+          text: "Processes",
+        },
+      },
+    },
+  };
+
+  return (
+    <div className="processes" style={{ height: "400px" }}>
+      <Bar data={chartData} options={chartOptions} plugins={[ChartDataLabels]} />
+    </div>
+  );
+}
+
+export default Plot2;
+
+\end{minted}
+
+\begin{itemize}
+    \item This frontend implementation for \texttt{Plot2} involves the creation of a stacked bar chart to visualize snapshots of processes over time using the \textbf{Chart.js} library. The chart is rendered inside the \texttt{Plot2} React component, which maintains two states: \texttt{queue} (an array storing the most recent process snapshots) and \texttt{colorMap} (a map associating each process PID with a unique color). The component dynamically updates these states based on the incoming process data, ensuring that the chart displays up to six most recent snapshots. Each process is represented as a colored bar, and the chart is designed to show the active state of each process in each snapshot.\\
+    \item The chart is customized to be stacked, with each process PID having its own bar in each snapshot. The \texttt{ChartDataLabels} plugin is used to display the process PID inside the bars for active processes, helping users identify processes easily. The chart scales automatically and is responsive to fit various screen sizes. The x-axis represents the snapshots, while the y-axis displays the number of processes, with the bars stacked to show process activity in each snapshot.
+\end{itemize}
+
+
+\end{itemize}
+
+\subsubsection{Backend Implementation}
+\begin{itemize}
+    \item \texttt{MONITOR\_CPU()}
+    \begin{minted}{python}
+def monitor_cpu():
+    #Continuously monitor and emit top CPU processes.
+    global process_data, killed_processes
+    while True:
+        update_process_data()
+        socketio.emit('cpu_data', process_data) #Emit updated data to all clients
+        time.sleep(SLEEP_INTERVAL)
+        process_data = [proc for proc in process_data if proc['pid'] not in 
+                         killed_processes]
+        killed_processes.clear()  # Clear the set of killed processes
+\end{minted}
+
+\begin{itemize}
+    \item \texttt{PURPOSE:}
+    \begin{itemize}
+        \item The function continuously monitors the CPU usage of processes, updates the global list of top CPU-consuming processes (\texttt{process\_data}), and emits this data to connected clients via a \texttt{Socket.IO} event. The monitoring and emission occur repeatedly with a delay defined by \texttt{SLEEP\_INTERVAL}.
+    \end{itemize}
+    
+   \item \texttt{KEY\_VARIABLES:}
+   \begin{itemize}
+    \item \textbf{\texttt{process\_data}}: The global list of processes with their CPU usage information, which is updated by the \texttt{update\_process\_data} function.
+    \item \textbf{\texttt{SLEEP\_INTERVAL}}: The interval (in seconds) between consecutive updates and emissions.
+\end{itemize}
+   \item \texttt{CODE\_ANALYSIS:}
+   \begin{itemize}
+       \item Continuous Monitoring:
+       \begin{itemize}
+    \item Runs an infinite loop to perform monitoring tasks without interruption.
+\end{itemize}
+
+\item {Update Process Data}
+\begin{itemize}
+    \item Calls the \texttt{update\_process\_data} function to refresh the global process information with the latest CPU usage and status.
+\end{itemize}
+
+\item {Emit Data to Clients}
+\begin{itemize}
+    \item Sends the updated \texttt{process\_data} to all connected clients using a \texttt{Socket.IO} event named \texttt{cpu\_data}.
+    \item Ensures real-time communication of CPU usage data to the client-side application.
+\end{itemize}
+
+\item {Sleep Interval}
+\begin{itemize}
+    \item Introduces a delay between consecutive iterations to prevent overloading the system and allow sufficient time for data collection.
+\end{itemize}
+   \end{itemize}
+
+
+\end{itemize}
+
+\item \texttt{UPDATE\_PROCESS\_DATA()}
+    \begin{minted}{python}
+ def update_process_data():
+    global process_data, killed_processes
+    
+    processes = []
+    current_pids = set()
+
+    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent','create_time']):
+        try:
+            current_pids.add(proc.info['pid'])
+            processes.append({
+                'pid': proc.info['pid'],
+                'name': proc.info['name'],
+                'cpu_percent': proc.info['cpu_percent'],
+                'create_time': datetime.datetime.fromtimestamp(
+                proc.info['create_time']).strftime('%Y-%m-%d %H:%M:%S'),
+            })
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    for proc in processes:
+        pid = proc['pid']
+        # Check if the pid exists. If yes update it else add it to the list.
+        existing_proc = next((p for p in process_data if p['pid'] == pid), None)
+        if existing_proc:
+            existing_proc['cpu_percent'] = proc['cpu_percent']
+        else:
+            process_data.append({
+                'pid': pid,
+                'name': proc['name'],
+                'cpu_percent': proc['cpu_percent'],
+                'create_time': proc['create_time'],
+            })
+
+    for proc in process_data:
+        if proc['pid'] not in current_pids:
+            proc['cpu_percent'] = 0
+            killed_processes.add(proc['pid'])
+
+    process_data = sorted(process_data, key=lambda x: x['cpu_percent'],
+                  reverse=True)[:NUM_PROCESSES]
+\end{minted}
+
+ \begin{itemize}
+    \item \texttt{PURPOSE:}
+    \\
+       The function maintains and updates a global list of processes (\texttt{process\_data}) by:
+\begin{itemize}
+    \item Collecting information about currently running processes.
+    \item Updating CPU usage for active processes.
+    \item Marking terminated processes as inactive.
+    \item Limiting the list to the top \texttt{NUM\_PROCESSES} by CPU usage.
+\end{itemize}
+    
+   \item \texttt{KEY\_VARIABLES:}
+   \begin{itemize}
+    \item \texttt{process\_data}: A global list containing information about processes, including PID, name, CPU usage, and creation time.
+    \item \texttt{killed\_processes}: A global set that stores the PIDs of processes marked as terminated.
+    \item \texttt{processes}: A local list temporarily storing process information retrieved during the current function execution.
+    \item \texttt{current\_pids}: A local set of PIDs for all currently running processes.
+\end{itemize}
+   \item \texttt{CODE\_ANALYSIS:}
+   \begin{itemize}
+       \item {Retrieve Process Information}
+\begin{itemize}
+    \item Iterates through all processes using \texttt{psutil.process\_iter} with attributes \texttt{pid}, \texttt{name}, \texttt{cpu\_percent}, and \texttt{create\_time}.
+    \item Safely handles exceptions for processes that no longer exist or are inaccessible.
+    \item Collects CPU usage and timestamps in a standardized format (\texttt{YYYY-MM-DD HH:MM:SS}).
+\end{itemize}
+
+    \item {Update Process Data}
+\begin{itemize}
+    \item For each process, checks if it already exists in \texttt{process\_data}.
+    \item Updates CPU usage if the process is found, or adds a new entry if it is not.
+\end{itemize}
+ 
+\item {Mark Terminated Processes}
+\begin{itemize}
+    \item Processes that no longer appear in the current set of PIDs are marked as inactive by setting their \texttt{cpu\_percent} to 0.
+    \item Their PIDs are added to the \texttt{killed\_processes} set.
+\end{itemize}
+
+\item {Sort and Limit Process List}
+\begin{itemize}
+    \item Sorts \texttt{process\_data} by CPU usage in descending order.
+    \item Trims the list to the top \texttt{NUM\_PROCESSES} by CPU usage.
+\end{itemize}
+\end{itemize}
+
+\end{itemize}
+
+\end{itemize}
+
+
+
+\subsubsection{Data used for the plot}
+\begin{itemize}
+    \item For PLOT1
+    \begin{itemize}
+        \item \texttt{name}: The name of the process.
+        \item \texttt{cpu\_percent}: The CPU usage percentage of the process.
+    \end{itemize}
+    \item For PLOT2
+    \begin{itemize}
+        \item \texttt{PID (Process ID)}: A unique identifier for each running process.
+        \item \texttt{Snapshot Information}: A boolean or binary indicator (1 or 0) that represents whether a process was active in that particular snapshot.
+        \item \texttt{Timestamp}: Used implicitly by the order of snapshots to track when each snapshot occurred.
+    \end{itemize}
+
+\end{itemize}
+\subsubsection{Challenges faced}
+\begin{itemize}
+    \item For PLOT1
+    \begin{itemize}
+      
+        \item \texttt{Handling Inaccessible or Terminated Processes}: Ensuring that terminated or no longer accessible processes are excluded or marked as inactive when using \texttt{psutil} to avoid errors.
+        
+        \item \texttt{Accurate Data Synchronization}: Consistently updating the process data across the backend to reflect real-time changes in process states and CPU usage.
+        
+        \item \texttt{Real-Time Updates Without Lag}: Ensuring that the frontend receives and displays real-time data updates without causing performance bottlenecks or delays, especially when the number of processes increases.
+        
+        \item \texttt{Responsive Chart Layout}: Adapting the chart to different screen sizes and resolutions while maintaining clarity and usability.
+
+    \end{itemize}
+    \item For PLOT2
+    \begin{itemize}
+        \item \texttt{Color Management}: Ensuring each process had a unique, consistent color across snapshots required a deterministic color generation function.
+        
+        \item \texttt{Performance Optimization}: Efficient management of the dynamic process snapshot queue was needed to avoid performance issues, especially as the number of processes increased.
+        
+        \item \texttt{Real-Time Data Synchronization}: Keeping process data updated in real-time while ensuring the frontend displayed the latest snapshots was a challenge due to frequent backend updates.
+        
+        \item We tried to get continuous flow of bars but as top five procceses can change drastically we sticked to show just the process like snaps.
+
+    \end{itemize}
+
+\end{itemize}
+\subsubsection{Uses of the plot}
+\begin{itemize}
+    \item For PLOT1
+    \begin{itemize}
+        \item \texttt{System Monitoring}: Provides a quick overview of top CPU-consuming processes in real time.
+
+        \item \texttt{Performance Analysis}: Identifies processes that consume excessive CPU resources, aiding in debugging or optimization.
+
+        \item \texttt{Educational Use}: Demonstrates process behavior and system resource utilization in a visually engaging way.
+        
+        \item \texttt{Decision Making}: Assists system administrators in identifying and managing resource-intensive processes.
+
+    \end{itemize}
+    \item For PLOT2
+    \begin{itemize}
+        \item \texttt{Visualizing Process Activity}: It provides a real-time view of which processes are active, helping to understand system load.
+        \item \texttt{Tracking Process Trends}: It allows users to observe how processes behave over time, such as identifying spikes in activity or unexpected terminations.
+
+        \item \texttt{Monitoring Performance}: It helps monitor the performance of processes, identifying those that may be consuming excessive resources or remaining idle.
+
+        \item \texttt{Debugging and Troubleshooting}: It assists developers and system administrators in identifying and resolving performance issues with processes.
+
+    \end{itemize}
+
+\end{itemize}
+
+\bigskip
+\subsection{HTop}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/htop_1.png}
+    \end{minipage}
+    \hfill
+    
+    \caption{Snapshot of the plot}
+\end{figure}
+The above plot updates every second, displaying the percentage of time each CPU core spends in various operational modes within a one-second interval. Additionally, the \texttt{Overall} metric represents the average CPU usage across all cores.
+\subsubsection{Frontend Implementation}
+
+Below is the implementation of the \texttt{Htop} component, written in JavaScript using React. 
+
+\begin{minted}[fontsize=\footnotesize]{javascript}
+import React, { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, LineElement, PointElement, 
+         CategoryScale, LinearScale, Filler } from 'chart.js';
+import io from 'socket.io-client';
+
+// Register the necessary chart elements
+ChartJS.register(Title, Tooltip, LineElement, PointElement, CategoryScale, LinearScale, Filler);
+
+const Plot4 = () => {
+  const [cpuData, setCpuData] = useState([]);
+  
+  useEffect(() => {
+    const socket = io('http://localhost:5000'); // Establish socket connection
+
+    socket.on('cpu_times', (data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setCpuData(data); // Update state with CPU data
+      }
+    });
+
+    return () => {
+      socket.disconnect(); // Cleanup on unmount
+    };
+  }, []);
+
+  const aggregateOverallData = (data) => {
+    const aggregatedData = {
+      user_time: 0,
+      system_time: 0,
+      nice_time: 0,
+      irq_time: 0,
+      softirq_time: 0,
+      iowait_time: 0,
+    };
+
+    data.forEach(item => {
+      if (item.core !== 'all') {
+        aggregatedData.user_time += item.user_time || 0;
+        aggregatedData.system_time += item.system_time || 0;
+        aggregatedData.nice_time += item.nice_time || 0;
+        aggregatedData.irq_time += item.irq_time || 0;
+        aggregatedData.softirq_time += item.softirq_time || 0;
+        aggregatedData.iowait_time += item.iowait_time || 0;
+      }
+    });
+
+    return aggregatedData;
+  };
+
+  const generateChartData = () => {
+    if (cpuData.length === 0) {
+      return {}; 
+    }
+
+    const overallData = aggregateOverallData(cpuData);
+    const labels = cpuData.map(item => (item.core === 'all' ? 'Overall' : Core ${item.core}));
+
+    const chartData = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'User Time',
+          data: [...cpuData.map(item => item.user_time || 0), overallData.user_time],
+          borderColor: 'green',
+          backgroundColor: 'rgba(0, 255, 0, 0.2)',
+          fill: true,
+        },
+        // Additional datasets...
+      ],
+    };
+
+    return chartData;
+  };
+
+  const chartOptions = {
+    responsive: true,
+    scales: {
+      x: { title: { display: true, text: 'CPU Cores' } },
+      y: { 
+        title: { display: true, text: 'Percentage Used' },
+        beginAtZero: true,
+        max: 100,
+      },
+    },
+  };
+
+  return (
+    <div>
+      <h1>Per CORE Usage</h1>
+      {cpuData.length === 0 ? (
+        <p>Loading data...</p>
+      ) : (
+        <Line data={generateChartData()} options={chartOptions} />
+      )}
+    </div>
+  );
+};
+
+export default Plot4;
+\end{minted}
+\textbf{Explanation of the Code:}
+
+1. \textbf{Dependencies and Imports:}
+   The code imports the necessary dependencies for the frontend:
+   \begin{itemize}
+       \item \texttt{react-chartjs-2}: A React wrapper for Chart.js.
+       \item \texttt{socket.io-client}: For real-time communication with the backend.
+       \item \texttt{chart.js} modules: To register and configure chart components.
+   \end{itemize}
+
+2. \textbf{State Management:}
+   \begin{itemize}
+       \item \texttt{useState}: Manages the \texttt{cpuData} array, which stores real-time CPU usage.
+       \item \texttt{useEffect}: Establishes a WebSocket connection and listens for data updates.
+   \end{itemize}
+
+3. \textbf{Data Aggregation:}
+   The \texttt{aggregateOverallData} function computes the total CPU times across all cores, ignoring any data labeled as "Overall" to avoid double counting.
+
+4. \textbf{Chart Generation:}
+   The \texttt{generateChartData} function prepares data for the chart, including:
+   \begin{itemize}
+       \item Labels for each core and an "Overall" label.
+       \item Datasets for various CPU times, such as user time, system time, and IRQ time.
+   \end{itemize}
+
+5. \textbf{Chart Options:}
+   Customizes the chart's appearance:
+   \begin{itemize}
+       \item Labels the x-axis as "CPU Cores."
+       \item Configures the y-axis to start at 0 and cap at 100 to represent percentages.
+   \end{itemize}
+
+6. \textbf{Rendering:}
+   Displays a loading message until data is available. Once data is received, it renders a line chart showing per-core CPU usage.
+
 \subsubsection{Backend Implementation}
 \begin{minted}{python}
-    import numpy as np
+    def get_core_times():
+    global cpu_times_info
+    num_cores = psutil.cpu_count(logical=False)
+    per_core_cpu_times = None
+    while True:
+        prev_per_core_cpu_times = per_core_cpu_times
+        try:
+            per_core_cpu_times = psutil.cpu_times(percpu=True)
+        except Exception as e:
+            print(f"Error getting per-core CPU times: {e}")
+            continue
+        
+        if prev_per_core_cpu_times is not None:
+            user_all, system_all, nice_all, irq_all, softirq_all, iowait_all, steal_all 
+            = 0, 0, 0, 0, 0, 0, 0 
+            for i, cpu_time in enumerate(per_core_cpu_times):
+                cpu_times_info.append({
+                    'core': i,
+                    'user_time':
+                    (cpu_time.user - prev_per_core_cpu_times[i].user)*100,
+                    'system_time': 
+                    (cpu_time.system - prev_per_core_cpu_times[i].system)*100,
+                    'nice_time': 
+                    (cpu_time.nice - prev_per_core_cpu_times[i].nice)*100,
+                    'irq_time': (cpu_time.irq - prev_per_core_cpu_times[i].irq)*100,
+                    'softirq_time': 
+                    (cpu_time.softirq - prev_per_core_cpu_times[i].softirq)*100,
+                    'iowait_time': 
+                    (cpu_time.iowait - prev_per_core_cpu_times[i].iowait)*100,
+                    'steal_time': 
+                    (cpu_time.steal - prev_per_core_cpu_times[i].steal)*100,
+                })
+                user_all += cpu_times_info[-1]['user_time']
+                system_all += cpu_times_info[-1]['system_time']
+                nice_all += cpu_times_info[-1]['nice_time']
+                irq_all += cpu_times_info[-1]['irq_time']
+                softirq_all += cpu_times_info[-1]['softirq_time']
+                iowait_all += cpu_times_info[-1]['iowait_time']
+                steal_all += cpu_times_info[-1]['steal_time']
+            cpu_times_info.append({
+                'core': 'all',
+                'user_time': (user_all/num_cores),
+                'system_time': (system_all/num_cores),
+                'nice_time': (nice_all/num_cores),
+                'irq_time': (irq_all/num_cores),
+                'softirq_time': (softirq_all/num_cores),
+                'iowait_time': (iowait_all/num_cores),
+                'steal_time': (steal_all/num_cores),
+            })
+        #Emits the data to the client
+        socketio.emit('cpu_times', cpu_times_info)
+        time.sleep(SLEEP_INTERVAL)
+        cpu_times_info = []
 \end{minted}
+ \begin{itemize}
+        \item \texttt{PURPOSE:}
+        \begin{itemize}
+            \item The function captures per-core CPU times using the \texttt{psutil} library, calculates the difference in CPU times between consecutive measurements, aggregates total times across all cores, and sends the data to a client through a \texttt{Socket.IO} event. This process repeats in a loop with a delay defined by \texttt{SLEEP\_INTERVAL}.
+        \end{itemize}
+
+        \item \texttt{KEY\_VARIABLES:}
+        \begin{itemize}
+            \item \textbf{\texttt{cpu\_times\_info}}: A global variable used to store CPU time information for each core and the aggregated data for all cores.
+            \item \textbf{\texttt{per\_core\_cpu\_times}}: Stores the most recent CPU times for all cores.
+            \item \textbf{\texttt{prev\_per\_core\_cpu\_times}}: Stores the previous CPU times for all cores to calculate deltas (differences) for each time metric.
+        \end{itemize}
+
+        \item \texttt{CODE\_ANALYSIS:}
+        \begin{itemize}
+            \item \textbf{Global Variable Declaration:} Declares \texttt{cpu\_times\_info} as a global variable to accumulate CPU time data.
+            \item \textbf{Initialization:} Initializes \texttt{per\_core\_cpu\_times} to \texttt{None} for the first iteration.
+            \item \textbf{Monitoring Loop:} Continuously collects, processes, and emits CPU time data to clients.
+            \item \textbf{Data Retrieval:} Retrieves per-core CPU times using \texttt{psutil.cpu\_times(percpu=True)}.
+            \item \textbf{Exception Handling:} Handles any exceptions (e.g., library or system errors) to ensure the program doesn't crash and retries in the next iteration.
+            \item \textbf{Skipping Invalid Iterations:} Skips processing if there are no previous CPU times to calculate differences.
+            \item \textbf{Metric Totals:} Uses variables (\texttt{user\_all}, \texttt{system\_all}, \texttt{nice\_all}, \texttt{irq\_all}, \texttt{softirq\_all}, \texttt{iowait\_all}, \texttt{steal\_all}) to store total values across all cores for each CPU time metric.
+            \item \textbf{Delta Calculation:} Iterates through each core's CPU times and calculates the difference (delta) for each CPU time metric by subtracting the previous values from the current ones.
+            \item \textbf{Data Aggregation:} Appends the data as a dictionary to \texttt{cpu\_times\_info}.
+            \item \textbf{Summary Entry:} Adds an entry to \texttt{cpu\_times\_info} representing the aggregated data across all cores.
+            \item \textbf{Data Emission:} Sends the \texttt{cpu\_times\_info} list to the connected client using \texttt{Socket.IO}.
+        \end{itemize}
+    \end{itemize}
+\subsubsection{Data used for the plot}
+
+The JSON data sent to the frontend provides detailed CPU usage statistics for individual cores as well as aggregated metrics across all cores. Each entry in the JSON array corresponds to a specific CPU core or an "all cores" summary and contains the following fields:
+
+\begin{itemize}
+    \item \textbf{\texttt{core}}:  
+    Indicates the core number (e.g., \texttt{0}, \texttt{1}, \texttt{2}, ...) or \texttt{"all"} for aggregated data across all cores. This field helps distinguish whether the data pertains to a specific core or the overall system.
+
+    \item \textbf{\texttt{user\_time}}:  
+    Represents the amount of time the CPU spent executing user-level processes (non-kernel code). This includes the execution of applications and user processes, excluding kernel/system activities.
+
+    \item \textbf{\texttt{system\_time}}:  
+    Represents the amount of time the CPU spent executing system-level processes (kernel code). This is typically used for tasks like handling I/O operations or managing system resources.
+
+    \item \textbf{\texttt{nice\_time}}:  
+    Indicates the time spent running user-level processes with a "nice" priority. Nice values are used to prioritize processes with lower importance.
+
+    \item \textbf{\texttt{irq\_time}}:  
+    Represents the time spent handling hardware interrupts. These are signals from hardware components (e.g., keyboards, network cards) that require immediate attention from the CPU.
+
+    \item \textbf{\texttt{softirq\_time}}:  
+    Indicates the time spent handling software interrupts. These are deferred tasks scheduled by the system to be handled later, often triggered by hardware interrupts.
+
+    \item \textbf{\texttt{iowait\_time}}:  
+    Represents the time the CPU spent waiting for I/O operations (e.g., disk or network) to complete. High values here may indicate I/O bottlenecks in the system.
+
+    \item \textbf{\texttt{steal\_time}}:  
+    Indicates the time that the virtual CPU was waiting for the physical CPU to become available (e.g., in virtualized environments). This is relevant in setups using virtual machines or containers.
+\end{itemize}
+\subsubsection{Challenges faced}
+    \begin{itemize}
+    \item \textbf{Calculation of times per sec}: As the /proc and psutil library both provide the user, kernel, etc times per core from the start of system, it was needed to calculate the difference for the for each second by storing the values of previous second. This resulted in a bit of overhead due to the calculation and storage.
+    \item \textbf{Real-time Data Handling and Aggregation}: Ensuring smooth updates with socket connections, preventing race conditions during state updates, and handling data inconsistencies for accurate "Overall" calculations.
+    \item \textbf{Dynamic Chart Updates and Configuration}: Managing efficient re-renders to avoid performance issues with large datasets, while ensuring visual clarity when displaying multiple datasets on the same chart.
+\end{itemize}
+
+\subsubsection{Uses of the plot}
+\begin{itemize}
+    \item \textbf{Monitoring CPU Load:} It provides a real-time visual representation of how each core's CPU time is distributed across different states (such as user time, system time, idle time, etc.) on a per-second basis. This can be used to monitor the load on each individual core in a multi-core processor.
+    \item \textbf{Performance Optimization:} By visualizing CPU usage patterns, developers can identify potential bottlenecks in resource usage, and optimize applications or processes that are consuming excessive CPU time in specific states.
+    \item \textbf{Comparing Cores:} The plot allows for a comparison of CPU usage across different cores. This can help in identifying imbalance in workload distribution between cores, which might point to issues in parallel processing or multi-threading.
+    \item \textbf{System Health Monitoring:} The \texttt{Overall} metric offers a summary of the aggregate CPU usage, which can be used to assess the general health of the system. High CPU usage across all cores may indicate that the system is under heavy load or experiencing performance issues.
+    \item \textbf{Real-Time Feedback:} The plot provides real-time feedback on the system's CPU behavior, enabling users to take immediate corrective actions, such as terminating resource-heavy processes or redistributing tasks across different cores.
+\end{itemize}
+\subsection{Process Migration Model}
+\subsubsection{Frontend Implementation}
+
+This is a simple model to visualize process migration. Process migration is modelled in the following way:
+\begin{enumerate}
+    \item Process are shown as discs having unique colors and names written on them.
+    \item The cpu cores are shown as containers.
+    \item A pipeline is shown through which a process is migrated to a different core (Analogous to how operating systems migrate processes from one core to another).
+\end{enumerate}
+The structure for creation of the model include the following:
+\begin{enumerate}
+    \item Data structures to store the processes and animations.
+    \begin{minted}{javascript}
+        const [processes, setProcesses] = useState({});
+        const [processOrder, setProcessOrder] = useState([]); 
+        const [processColors, setProcessColors] = useState({});
+        const [animations, setAnimations] = useState({});
+        const [staticPositions, setStaticPositions] = useState({});
+    \end{minted}
+    \item Extracting data sent through the socket connection and setting up the required data structures. 
+\begin{minted}{javascript}
+useEffect(() => {
+    const socket = socketIOClient(SOCKET_URL);
+
+    socket.on("cpu_migrations", (data) => {
+      setProcesses((prev) => {
+        const updatedProcesses = { ...prev };
+
+        data.forEach((process) => {
+          const { pid, to_core, cpu_percent, name } = process;
+          const prevProcess = updatedProcesses[pid];
+
+          if (prevProcess && prevProcess.core !== to_core) {
+            setAnimations((prevAnimations) => ({
+              ...prevAnimations,
+              [pid]: {
+                fromCore: prevProcess.core,
+                toCore: to_core,
+              },
+            }));
+
+            // Delay updating the core until after the animation
+            setTimeout(() => {
+              setProcesses((finalProcesses) => ({
+                ...finalProcesses,
+                [pid]: {
+                  ...finalProcesses[pid],
+                  core: to_core,
+                },
+              }));
+              setAnimations((prev) => {
+                const updated = { ...prev };
+                delete updated[pid];
+                return updated;
+              });
+            }, 800); // Match animation duration
+          } else {
+            updatedProcesses[pid] = {
+              ...prevProcess,
+              pid,
+              core: to_core,
+              cpu_percent,
+              name,
+            };
+
+            // Update process order
+            setProcessOrder((prevOrder) => {
+              if (!prevOrder.includes(pid)) {
+                return [...prevOrder, pid];
+              }
+              return prevOrder;
+            });
+          }
+        });
+
+        pruneOldProcesses(updatedProcesses);
+        return updatedProcesses;
+      });
+    });
+
+    return () => socket.disconnect();
+  }, []);
+\end{minted}
+Functions used :
+\begin{enumerate}
+    \item \textbf{\texttt{useEffect}} : It is used to perform side effects in react code when some information is updated.
+    \item \textbf{\texttt{socketIOClient}} : It is used to establish a connection between the frontend and the backend.
+    \item \textbf{\texttt{setProcesses}} : It is used to update the processes in the state.
+    \item \textbf{\texttt{setAnimations}} : It is used to update the animations in the state.
+    \item \textbf{\texttt{setProcessOrder}} : It is used to update the order of the processes in the state.
+    \item \textbf{\texttt{pruneOldProcesses}} : It is used to remove the old processes from the state. (It is implemented to make visualization better with lesser number of processes.)
+    \item \textbf{\texttt{setTimeout}} : It is used to delay the execution of a function.
+\end{enumerate}
+\item Creating the model using the data structures.
+\begin{minted}{javascript}
+    {cores.map((core) => (
+  <div key={core} className="core-with-connection">
+    <div className="vertical-connection"></div>
+    <div className="container">
+      {[
+        ...Object.values(processes)
+          .filter((p) => animations[p.pid]?.fromCore === core)
+          .map((p) => {
+            const radius = Math.sqrt(p.cpu_percent || 1) * 10;
+            return (
+              <div
+                key={`${p.pid}-down`}
+                className="process-disc move-down"
+                style={{
+                  backgroundColor: getProcessColor(p.pid), 
+                  width: `${radius}px`, height: `${radius}px`,
+                  fontSize: `${radius / 6}px`,
+                }}
+              >
+                {radius > 20 ? p.name : ""}
+              </div>
+            );
+          }),
+
+        // Static processes assigned to this core
+        ...Object.values(processes)
+          .filter(
+            (p) =>
+              (p.core === core || animations[p.pid]?.toCore === core) &&
+              !animations[p.pid] // Ignore animated processes
+          )
+          .map((p) => {
+            const radius = Math.sqrt(p.cpu_percent || 1) * 10;
+            const pos = getStaticPosition(p.pid, radius);
+            return (
+              <div
+                key={p.pid}
+                className="process-disc"
+                style={{
+                  backgroundColor: getProcessColor(p.pid), // Color of process
+                  width: `${radius}px`, height: `${radius}px`, // Disc size
+                  top: `${pos.top}px`, left: `${pos.left}px`, // Positioning
+                  fontSize: `${radius / 6}px`, // Font size adjustment
+                }}
+              >
+                {radius > 20 ? p.name : ""} {/* Show name if large */}
+              </div>
+            );
+          }),
+
+        // Processes moving toward this core
+        ...Object.values(processes)
+          .filter((p) => animations[p.pid]?.toCore === core)
+          .map((p) => {
+            const radius = Math.sqrt(p.cpu_percent || 1) * 10;
+            return (
+              <div
+                key={`${p.pid}-up`}
+                className="process-disc move-up"
+                style={{
+                  backgroundColor: getProcessColor(p.pid), // Process color
+                  width: `${radius}px`, height: `${radius}px`, // Size of disc
+                  fontSize: `${radius / 6}px`, // Font size adjustment
+                }}
+              >
+                {radius > 20 ? p.name : ""} {/* Show name if large */}
+              </div>
+            );
+          }),
+      ]}
+    </div>
+  </div>
+))}
+
+\end{minted}
+\end{enumerate}
+\subsubsection{Backend Implementation}
+\begin{minted}{python}
+    def track_cpu_migrations():
+    global core_affinity_state, migration_data
+
+    while True:
+        try:
+            for proc in psutil.process_iter(['pid', 'name','cpu_percent']):
+                pid = proc.info['pid']
+                name = proc.info['name']
+                cpu_percent=proc.info['cpu_percent']
+                try:
+                    # Read the current CPU/core the process is running on
+                    with open(f"/proc/{pid}/stat", "r") as stat_file:
+                        stat_data = stat_file.read().split()
+                        current_cpu = int(stat_data[38])  # 39th value (index 38) is the CPU number
+                except (FileNotFoundError, psutil.AccessDenied, IndexError):
+                    # Process might have terminated or access denied
+                    continue
+                except psutil.NoSuchProcess:
+                    # Remove process from tracking if it no longer exists
+                    if pid in core_affinity_state:
+                        del core_affinity_state[pid]
+                    continue
+
+                # Check if the process has a previous CPU core recorded
+                if pid in core_affinity_state:
+                    previous_cpu = core_affinity_state[pid]
+                    if previous_cpu != current_cpu:
+                        # Log the migration
+                        migration_entry = {
+                            'pid': pid,
+                            'name': name,
+                            'cpu_percent': cpu_percent,
+                            'from_core': previous_cpu,
+                            'to_core': current_cpu,
+                        }
+                        migration_data.append(migration_entry)
+
+                # Update the tracked core state
+                core_affinity_state[pid] = current_cpu
+
+        except Exception as e:
+            print(f"Error tracking CPU migrations: {e}")
+        socketio.emit('cpu_migrations', migration_data)  # Send to clients
+        time.sleep(SLEEP_INTERVAL)  # Avoid high CPU usage
+        migration_data=[]
+\end{minted}
+\begin{itemize}
+    \item \texttt{PURPOSE:}
+    \begin{itemize}
+        \item The function continuously monitors active processes to detect migrations between CPU cores. 
+        \item It tracks the core affinity for each process, identifies changes in the core a process is running on, logs migration data, and emits this information to connected clients through a Socket.IO event.
+    \end{itemize}
+    \item \texttt{KEY VARIABLES:}
+    \begin{itemize}
+        \item \textbf{\texttt{core\_affinity\_state}}: A global dictionary that tracks the last known CPU core for each process by its PID.
+        \item \textbf{\texttt{migration\_data}}:  A global list that logs details of processes that have migrated between CPU cores.
+        \item \textbf{\texttt{current\_cpu}}: The current CPU core a process is running on, retrieved from the /proc/[pid]/stat file.
+        \item \textbf{\texttt{previous\_cpu}}:The last recorded CPU core for a process, used to detect migrations.
+    \end{itemize}
+    \item \texttt{CODE ANALYSIS:}
+    \begin{itemize}
+        \item \textbf{\texttt{Continuous Monitoring}}:
+        \begin{itemize}
+              \item Runs an infinite loop to track CPU core migrations without interruptions.
+        \end{itemize}
+       \item \textbf{\texttt{Retrieve Process Information}}:
+       \begin{itemize}
+            \item Iterates through all active processes using psutil.process\_iter to fetch attributes like pid, name, and cpu\_percent.
+            \item Reads the /proc/[pid]/stat file to identify the current CPU core for each process.
+            \item Handles exceptions like FileNotFoundError, psutil.AccessDenied, and psutil.NoSuchProcess to ensure robustness.
+       \end{itemize}
+        \item \textbf{\texttt{Detect and Log Migrations}}:
+        \begin{itemize}
+            \item Compare the current CPU core (current\_cpu) with the last recorded core (previous\_cpu) for each process.
+            \item If a migration is detected, append a dictionary with migration details (pid, name, cpu\_percent, from\_core, to\_core) to migration\_data.
+        \end{itemize}
+\item \textbf{\texttt{Emit Migration Data}}:
+\begin{itemize}
+          \item Sends the logged migration data to connected clients via a Socket.IO event named cpu\_migrations.
+          \item Clears migration\_data after each emission to reset for the next iteration.
+\end{itemize}
+    \end{itemize}
+\end{itemize}   
+\subsubsection{Data used for the plot}
+The JSON data sent to the frontend provides information of CPU migrations of different processes occurred in a second.
+\begin{itemize}
+  \item \textbf{\texttt{pid}}: Identifies the specific process that has migrated. Each migration event corresponds to a unique process ID.
+  \item \textbf{\texttt{name}}:Describes the name of the process. This helps to identify which process is moving between CPU cores.
+  \item \textbf{\texttt{cpu\_percent}}:Shows the percentage of CPU resources being used by the process at the time of migration. This gives an indication of how much processing power the process is utilizing when the migration occurs.
+  \item \textbf{\texttt{from\_core}}:Indicates the CPU core the process was previously running on. It helps track which CPU core the process migrated from.
+  \item \textbf{\texttt{to\_core}}:Specifies the new CPU core the process is now running on after migration. This is crucial for identifying the migration path.
+\end{itemize}
+\subsubsection{Challenges faced}
+\begin{enumerate}
+    \item \textbf{\texttt{Real-time Data Transmission}}: Hundreds of processes are active simultaneously, and tracking their migrations in real-time can lead to high CPU usage. To prevent this, we implemented a sleep interval to reduce the frequency of data transmission.
+    \item \textbf{\texttt{Data Consistency}}: Due to this sleep interval, there is a possibility of missing migrations. For this, we assume the process once sent to a core remain in the core till it is migrated to a new core. This assumption helps in maintaining the consistency of the data.
+    \item \textbf{\texttt{Showing the migration path}}: We faced a challenge in showing the migration path of the processes. We used a pipeline to show the migration path of the processes.
+    \item \textbf{\texttt{Showing Process Discs}}: As mentioned, we can have a lot of processes running simultaneously. We faced a challenge of showing all the processes clearly. Hence we removed the old entries for showing the latest information.
+\end{enumerate}
+\subsubsection{Uses of the plot}
+\begin{itemize}
+    \item \textbf{\texttt{Performance monitoring}}:
+      \begin{itemize}
+          \item Tracks process migrations across cores, highlighting CPU utilization trends.
+          \item Helps identify over-utilized or under-utilized cores, ensuring optimal resource distribution.
+      \end{itemize}
+    \item \textbf{\texttt{Process Behavior Analysis}}:
+      \begin{itemize}
+          \item Visualizes processes frequently migrating between cores, revealing system optimizations or inefficiencies.
+          \item Helps analyze the impact of CPU affinity on process performance.
+      \end{itemize}
+      \item \textbf{\texttt{System Load Analysis}}:
+      \begin{itemize}
+          \item Helps evaluate system behavior under different load conditions.
+          \item Shows how system adapts to resource demands and manages core utilization.
+      \end{itemize}
+  \end{itemize}
+\subsection{navyaplot}
+\subsubsection{Frontend Implementation}
+\subsubsection{Backend Implementation}
 \subsubsection{Data used for the plot}
 Mention what all data is used.
 \subsubsection{Challenges faced}
