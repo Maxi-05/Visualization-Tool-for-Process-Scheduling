@@ -63,9 +63,6 @@ const Plot4 = () => {
     // Extract labels dynamically (using core names or 'Overall' for aggregation)
     const labels = cpuData.map(item => (item.core === 'all' ? 'Overall' : `Core ${item.core}`));
 
-    // Add "Overall" data to the labels and data arrays
-    labels.push('Overall');
-    
     // Build the chart data structure
     const chartData = {
       labels: labels,
@@ -148,16 +145,17 @@ const Plot4 = () => {
       y: {
         title: {
           display: true,
-          text: 'Usage (Time in ms)',
+          text: 'Percentage Used',
         },
         beginAtZero: true, // Ensure the chart starts at 0 on the Y axis
+        max: 100, // Fix the maximum value of the y-axis to 100 (representing percentage)
       },
     },
   };
 
   return (
     <div>
-      <h1>CPU Usage Graph</h1>
+      <h1>Per CORE Usage</h1>
       {cpuData.length === 0 ? (
         <p>Loading data...</p>
       ) : (
