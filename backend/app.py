@@ -223,12 +223,15 @@ def track_cpu_migrations():
     """
     global core_affinity_state, migration_data
 
+    # Get the number of CPU cores using psutil
+    num_cores = psutil.cpu_count()
+
     while True:
         try:
-            for proc in psutil.process_iter(['pid', 'name','cpu_percent']):
+            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
                 pid = proc.info['pid']
                 name = proc.info['name']
-                cpu_percent=proc.info['cpu_percent']
+                cpu_percent = proc.info['cpu_percent']
                 try:
                     # Read the current CPU/core the process is running on
                     with open(f"/proc/{pid}/stat", "r") as stat_file:
@@ -254,6 +257,7 @@ def track_cpu_migrations():
                             'cpu_percent': cpu_percent,
                             'from_core': previous_cpu,
                             'to_core': current_cpu,
+                            'num_cores': num_cores  # Add number of CPU cores
                         }
                         migration_data.append(migration_entry)
 
@@ -264,22 +268,21 @@ def track_cpu_migrations():
             print(f"Error tracking CPU migrations: {e}")
         socketio.emit('cpu_migrations', migration_data)  # Send to clients
         time.sleep(SLEEP_INTERVAL)  # Avoid high CPU usage
-        migration_data=[]
+        migration_data = []
 
 process_states = {}  # Dictionary to store state intervals
 TIME_RANGE = 1  # User-defined time range in seconds
 SLEEP_INTERVAL1 = 0.1  # Sampling interval
 
 def monitor_process_states():
-    """
-    Monitor process state transitions and ensure durations match the time range.
-    """
     global process_states, TIME_RANGE
+    last_emit_time = time.time()  # Initialize last_emit_time
 
     while True:
         current_time = time.time()  # Current timestamp
         start_time = current_time - TIME_RANGE  # Lower bound of time range
 
+        # Update process state data
         for proc in psutil.process_iter(attrs=['pid', 'name', 'status', 'cpu_percent']):
             try:
                 pid = proc.info['pid']
@@ -295,49 +298,72 @@ def monitor_process_states():
 
                 # Get the last recorded state for the process
                 states = process_states[pid]['states']
+                current_time_s = time.time()
+                if states :
+                 states[-1]['end_time'] = current_time_s
+                 states[-1]['duration'] = states[-1]['end_time'] - states[-1]['start_time']
                 if states and states[-1]['state'] == state:
-                    # Update the end time of the current state, capped at current_time
-                    states[-1]['end_time'] = min(current_time, start_time + TIME_RANGE)
-                    states[-1]['duration'] = states[-1]['end_time'] - states[-1]['start_time']
+                    pass
                 else:
                     # Add a new state entry
+
+                    
                     states.append({
                         'state': state,
-                        'start_time': max(current_time, start_time),  # Ensure start_time is within range
-                        'end_time': current_time,
+                        'start_time': current_time_s,
+                        'end_time': current_time_s,
                         'duration': 0  # Initial duration
                     })
-
-                # Filter and truncate states to stay within the time range
-                process_states[pid]['states'] = [
-                    {
-                        **s,
-                        'start_time': max(s['start_time'], start_time),  # Adjust start_time if earlier
-                        'end_time': min(s['end_time'], start_time + TIME_RANGE),  # Adjust end_time if later
-                        'duration': min(s['end_time'], start_time + TIME_RANGE) - max(s['start_time'], start_time)
-                    }
-                    for s in states if s['end_time'] > start_time
-                ]
-
+                    
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
 
-        # Remove entries for terminated processes outside the time range
-        process_states = {
-            pid: data for pid, data in process_states.items()
-            if any(s['end_time'] >= start_time for s in data['states'])
-        }
-        running_processes = {
-            pid: data for pid, data in process_states.items()
-            if any(s['state'] == psutil.STATUS_RUNNING for s in data['states'])
-        }
+        emit_process_states = {}
+        if time.time() - last_emit_time >= 1:
+            for pid, data in process_states.items():
+                total_duration = 0
+                adjusted_states = []
 
-        # Emit only running processes
-        socketio.emit('process_states', running_processes)
-        # Emit the state data for Gantt chart
-        # socketio.emit('process_states', process_states)
+                for state in data['states']:
+                    duration = min(state['end_time'], start_time + TIME_RANGE) - max(state['start_time'], start_time)
+
+                    if duration > 0:
+                        total_duration += duration
+                        # Adjust the state in the temporary variable
+                        adjusted_states.append({
+                            'state': state['state'],
+                            'start_time': max(state['start_time'], start_time),
+                            'end_time': min(state['end_time'], start_time + TIME_RANGE),
+                            'duration': duration
+                        })
+                # if total_duration > 0 :
+                #     scale_factor=TIME_RANGE/total_duration
+                #     for adjusted_state in adjusted_states:
+                #      adjusted_state['duration'] *= scale_factor
+                #      # Adjust end_time based on normalized duration
+                #      adjusted_state['end_time'] = adjusted_state['start_time'] + adjusted_state['duration']                  
+                emit_process_states[pid] = {
+                    'name': data['name'],
+                    'states': adjusted_states
+                }
+
+            # Emit only running processes
+            # running_processes = {
+            #     pid: data for pid, data in emit_process_states.items()
+            #     if any(s['state'] == psutil.STATUS_RUNNING for s in data['states'])
+            # }
+            running_processes = {
+             pid: data for pid, data in emit_process_states.items()
+             if any('running' in state['state'] for state in data['states'])
+             }   
+
+
+            # Emit the state data for Gantt chart
+            socketio.emit('process_states', running_processes)  # Emit running processes
+            last_emit_time = time.time()  # Update the last emission time
 
         time.sleep(SLEEP_INTERVAL1)  # Frequent polling
+
 
 class Node:
     def __init__(self, key, value, name):

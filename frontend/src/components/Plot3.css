@@ -5,15 +5,15 @@
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
+  height:425px;
 }
 
 /* Transparent horizontal pipe below the containers */
 .horizontal-pipe {
   position: absolute;
   bottom: 0;
-  width: 100%;
   height: 30px; /* Thickness of the pipe */
-  background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent color */
+  background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent color */
   z-index: 1; /* Ensure it stays behind connections and containers */
 }
 
@@ -28,9 +28,13 @@
 /* Each core and its connection */
 .core-with-connection {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   position: relative;
+}
+.core-label{
+  font-weight: bold;
+  color: rgb(68, 68, 123);
 }
 
 /* Vertical connection from container to the pipe */
@@ -72,7 +76,7 @@
     top: 0;
   }
   100% {
-    top: 300px; /* Move out of the container */
+    top: 500px; /* Move out of the container */
   }
 }
 
@@ -83,7 +87,7 @@
 /* Move-up animation */
 @keyframes moveUp {
   0% {
-    top: 600px; /* Start below the container */
+    top: 800px; /* Start below the container */
   }
   100% {
     top: 0px; /* Enter into the container */
@@ -92,4 +96,7 @@
 
 .process-disc.move-up {
   animation: moveUp 0.8s ease-in-out forwards;
+}
+.plot3-container h1{
+  color: #00796b;
 }

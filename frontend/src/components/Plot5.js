@@ -1,32 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import '../App.css';
+import io from 'socket.io-client';
 
-function Plot5({ processStates }) {
-  // Define static legend items
-  const legendData = [
-    { state: 'running', color: '#4caf50' },
-    { state: 'sleeping', color: '#cfd8dc' },
-    { state: 'idle', color: '#f5f5dc' },
-    { state: 'default', color: '#8884d8' }
-  ];
+const socket = io('http://127.0.0.1:5000'); // Replace with your server address
 
-  // Transform the processStates data into a format suitable for the chart
-  const transformedData = Object.entries(processStates).map(([pid, process]) => {
-    const dataEntry = { name: process.name, totalTime: 0 };  // Track total time for each process
+function Plot5() {
+  const [processStates, setProcessStates] = useState({}); // State to store data from the socket
 
-    process.states.forEach((state) => {
-      const duration = state.end_time - state.start_time;  // Calculate the duration
-      // Flatten the state data into a numeric value (duration) for the bar chart
-      dataEntry[state.state] = duration;
-      dataEntry.totalTime = Math.max(dataEntry.totalTime, state.end_time);  // Update the total time of the process
+  // Colors for different states
+  const stateColors = {
+    running: '#4caf50',  // Green
+    sleeping: '#FF0000', // Red
+    idle: '#FFFF00',     // Yellow
+    default: '#8884d8',  // Default color for unknown states
+  };
+
+  // Fetch data from the socket
+  useEffect(() => {
+    socket.on('process_states', (data) => {
+      setProcessStates(data); // Update process states when data is received
     });
+
+    return () => {
+      socket.off('process_states'); // Cleanup listener when component unmounts
+    };
+  }, []);
+
+  // Transform processStates into chart data with proper time stacking
+  const transformedData = Object.entries(processStates).map(([pid, process]) => {
+    const dataEntry = { name: process.name }; // Initialize with process name
+    const totalDuration = process.states.reduce((sum, state) => sum + state.duration, 0);
+  
+    // Add each state's normalized duration to the data entry
+    process.states.forEach((state, index) => {
+      const stateKey = `${state.state}-${index}`;
+      dataEntry[stateKey] = totalDuration > 0 ? state.duration / totalDuration : 0;
+    });
+  
     return dataEntry;
   });
+  
 
   return (
     <div className="process-states">
-      <h2>Process State Durations</h2>
+      <h2>Process State Visualization</h2>
+
+      {/* Custom Legend */}
+      <div className="legend">
+        {Object.entries(stateColors).map(([state, color]) => (
+          <span key={state} style={{ color, marginRight: '10px' }}>
+            ● {state}
+          </span>
+        ))}
+      </div>
+
+      {/* Bar Chart */}
       <BarChart
         width={600}
         height={400}
@@ -42,32 +70,25 @@ function Plot5({ processStates }) {
         <XAxis dataKey="name" />
         <YAxis domain={[0, 'auto']} />
         <Tooltip />
-        {/* Manually define the Legend based on the static legendData */}
-        <Legend>
-          {legendData.map((item) => (
-            <span key={item.state} style={{ color: item.color }}>
-              {item.state}
-            </span>
-          ))}
-        </Legend>
-        {/* Dynamically create bars for each state */}
+        {/* <Legend /> */}
+
+        {/* Dynamically generate bars for each state-index */}
         {transformedData.length > 0 &&
           Object.keys(transformedData[0])
-            .filter((key) => key !== 'name' && key !== 'totalTime')
-            .map((state) => (
-              <Bar
-                key={state}
-                dataKey={state}
-                fill={
-                  state === 'running' ? '#4caf50' :    // Green for running
-                  state === 'sleeping' ? '#FF0000' :   // Light gray for sleeping
-                  state === 'idle' ? '#FFFF00' :       // Beige for idle
-                  '#8884d8'                            // Default color for other states
-                }
-                barSize={20}
-                stackId="a"
-              />
-            ))}
+            .filter(key => key !== 'name') // Exclude the name field
+            .map((key) => {
+              // Extract the state from the key (e.g., running-0 or sleeping-1)
+              const [state, index] = key.split('-');
+              return (
+                <Bar
+                  key={key}
+                  dataKey={key}  // Use unique key based on state-index
+                  stackId="a"    // Stack bars
+                  fill={stateColors[state] || stateColors.default}  // Use color for the state
+                  barSize={20}
+                />
+              );
+            })}
       </BarChart>
     </div>
   );

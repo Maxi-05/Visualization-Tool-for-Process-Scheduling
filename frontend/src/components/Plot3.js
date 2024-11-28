@@ -5,12 +5,12 @@ import "./Plot3.css";
 const SOCKET_URL = "http://127.0.0.1:5000";
 
 const Plot3 = () => {
-  const cores = [0, 1, 2, 3, 4, 5];
   const [processes, setProcesses] = useState({});
   const [processOrder, setProcessOrder] = useState([]); // Track process addition order
   const [processColors, setProcessColors] = useState({});
   const [animations, setAnimations] = useState({});
   const [staticPositions, setStaticPositions] = useState({});
+  const [numCore, setNumCore] = useState(0);
 
   // Assign a unique color to each process based on its pid
   const getProcessColor = (pid) => {
@@ -68,7 +68,8 @@ const Plot3 = () => {
         const updatedProcesses = { ...prev };
 
         data.forEach((process) => {
-          const { pid, to_core, cpu_percent, name } = process;
+          const { pid, to_core, cpu_percent, name, num_cores } = process;
+          setNumCore(num_cores);
           const prevProcess = updatedProcesses[pid];
 
           if (prevProcess && prevProcess.core !== to_core) {
@@ -121,13 +122,15 @@ const Plot3 = () => {
 
     return () => socket.disconnect();
   }, []);
-
+  console.log(numCore);
   return (
     <div className="plot3-container">
+      <h1>Process Migration Model</h1>
       <div className="containers">
-        {cores.map((core) => (
+        
+        {Array.from({length: numCore}, (_ , core) => (
           <div key={core} className="core-with-connection">
-            <div className="vertical-connection"></div>
+            <div className="core-label">Core {core}</div>
             <div className="container">
               {[
                 // Move-down animations first
@@ -210,11 +213,12 @@ const Plot3 = () => {
                   }),
               ]}
             </div>
-            <div className="core-label">Core {core}</div>
+            
+            <div className="vertical-connection"></div>
           </div>
         ))}
       </div>
-      <div className="horizontal-pipe"></div>
+      <div className="horizontal-pipe" style={{width:`${numCore*200}px`}}></div>
     </div>
   );
 };
