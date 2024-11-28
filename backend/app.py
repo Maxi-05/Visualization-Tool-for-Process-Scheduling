@@ -83,59 +83,91 @@ def task4():
     </script>
     '''
 
+@app.route('/task5')
+def task5():
+    return '''
+    <h1>Process Virtual Memory Times</h1>
+    <p>Virtual memory times data will appear below:</p>
+    <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('tree_data', function(data) {
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        });
+    </script>
+    '''
+
 ### End of debugging
 
 def get_current_time():
     """Returns the current timestamp as a formatted string."""
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-
 def update_process_data():
-    """Update the list of processes and their CPU usage."""
     global process_data, killed_processes
-
+    
     processes = []
     current_pids = set()
 
-    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'create_time']):
+    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent',  'create_time']):
         try:
             current_pids.add(proc.info['pid'])
-            cpu_percent = proc.info['cpu_percent'] if proc.info['cpu_percent'] is not None else 0.0
             processes.append({
                 'pid': proc.info['pid'],
                 'name': proc.info['name'],
-                'cpu_percent': cpu_percent,
+                'cpu_percent': proc.info['cpu_percent'],
                 'create_time': datetime.datetime.fromtimestamp(proc.info['create_time']).strftime('%Y-%m-%d %H:%M:%S'),
             })
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
 
-    # Update or add processes to `process_data`
     for proc in processes:
         pid = proc['pid']
+        # Check if the pid exists. If yes update it else add it to the list.
         existing_proc = next((p for p in process_data if p['pid'] == pid), None)
         if existing_proc:
             existing_proc['cpu_percent'] = proc['cpu_percent']
         else:
-            process_data.append(proc)
+            process_data.append({
+                'pid': pid,
+                'name': proc['name'],
+                'cpu_percent': proc['cpu_percent'],
+                'create_time': proc['create_time'],
+            })
 
-    # Mark terminated processes
     for proc in process_data:
         if proc['pid'] not in current_pids:
-            proc['cpu_percent'] = 0  # Mark as inactive
+            proc['cpu_percent'] = 0
             killed_processes.add(proc['pid'])
 
-    # Keep only top `NUM_PROCESSES` by CPU usage
     process_data = sorted(process_data, key=lambda x: x['cpu_percent'], reverse=True)[:NUM_PROCESSES]
+
+
+
+def monitor_cpu():
+    global process_data, killed_processes
+    """Continuously monitor and emit top CPU processes."""
+    while True:
+        update_process_data()
+        # Emit data as JSON
+        socketio.emit('cpu_data', process_data)
+        time.sleep(SLEEP_INTERVAL)
+        process_data = [proc for proc in process_data if proc['pid'] not in killed_processes]
+        killed_processes = set()
+        # print(json.dumps(process_data, indent=2))  # Print to stdout
+        # time.sleep(1)  # Refresh every second
 
 
 def monitor_cpu():
     """Continuously monitor and emit top CPU processes."""
+    global process_data, killed_processes
     while True:
         update_process_data()
         socketio.emit('cpu_data', process_data)  # Emit updated data to all clients
         time.sleep(SLEEP_INTERVAL)
         process_data = [proc for proc in process_data if proc['pid'] not in killed_processes]
+        killed_processes.clear()  # Clear the set of killed processes
 
 def get_core_times():
     global cpu_times_info
@@ -307,6 +339,170 @@ def monitor_process_states():
 
         time.sleep(SLEEP_INTERVAL1)  # Frequent polling
 
+class Node:
+    def __init__(self, key, value, name):
+        self.key = key
+        self.value = value
+        self.name = name  # Process name
+        self.color = 'red'  # New nodes are always red
+        self.left = None
+        self.right = None
+        self.parent = None
+
+class RedBlackTree:
+    def __init__(self):
+        self.TNULL = Node(0, 0, "")
+        self.TNULL.color = 'black'
+        self.root = self.TNULL
+
+    def insert(self, key, value, name):
+        node = Node(key, value, name)
+        node.parent = None
+        node.left = self.TNULL
+        node.right = self.TNULL
+        node.color = 'red'
+
+        parent = None
+        current = self.root
+
+        while current != self.TNULL:
+            parent = current
+            if node.value < current.value:  # Compare based on value (vtimes)
+                current = current.left
+            else:
+                current = current.right
+
+        node.parent = parent
+        if parent is None:
+            self.root = node
+        elif node.value < parent.value:  # Compare based on value (vtimes)
+            parent.left = node
+        else:
+            parent.right = node
+
+        if node.parent is None:
+            node.color = 'black'
+            return
+
+        if node.parent.parent is None:
+            return
+
+        self.fix_insert(node)
+
+    def fix_insert(self, k):
+        while k.parent.color == 'red':
+            if k.parent == k.parent.parent.right:
+                u = k.parent.parent.left
+                if u.color == 'red':
+                    u.color = 'black'
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    k = k.parent.parent
+                else:
+                    if k == k.parent.left:
+                        k = k.parent
+                        self.right_rotate(k)
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    self.left_rotate(k.parent.parent)
+            else:
+                u = k.parent.parent.right
+
+                if u.color == 'red':
+                    u.color = 'black'
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    k = k.parent.parent
+                else:
+                    if k == k.parent.right:
+                        k = k.parent
+                        self.left_rotate(k)
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    self.right_rotate(k.parent.parent)
+            if k == self.root:
+                break
+        self.root.color = 'black'
+
+    def left_rotate(self, x):
+        y = x.right
+        x.right = y.left
+        if y.left != self.TNULL:
+            y.left.parent = x
+
+        y.parent = x.parent
+        if x.parent is None:
+            self.root = y
+        elif x == x.parent.left:
+            x.parent.left = y
+        else:
+            x.parent.right = y
+        y.left = x
+        x.parent = y
+
+    def right_rotate(self, x):
+        y = x.left
+        x.left = y.right
+        if y.right != self.TNULL:
+            y.right.parent = x
+
+        y.parent = x.parent
+        if x.parent is None:
+            self.root = y
+        elif x == x.parent.right:
+            x.parent.right = y
+        else:
+            x.parent.left = y
+        y.right = x
+        x.parent = y
+
+    def get_root(self):
+        return self.root
+
+    def inorder_helper(self, node):
+        if node != self.TNULL:
+            self.inorder_helper(node.left)
+            print(f"{node.key}: {node.value} ({node.name})")
+            self.inorder_helper(node.right)
+
+    def inorder(self):
+        self.inorder_helper(self.root)
+
+def serialize_tree(node, TNULL):
+    """
+    Serializes the Red-Black Tree into a dictionary format.
+    """
+    if node == TNULL:
+        return None
+
+    return {
+        'pid': node.key,
+        'vruntime': node.value,
+        'name': node.name,
+        'color': node.color,
+        'left': serialize_tree(node.left, TNULL),
+        'right': serialize_tree(node.right, TNULL)
+    }
+
+def get_process_vtimes():
+    """
+    Collects the virtual memory times (vtimes) of all processes and inserts them into a Red-Black Tree.
+    """
+    rbt = RedBlackTree()
+
+    while True:
+        for proc in psutil.process_iter(['pid', 'name', 'cpu_times']):
+            try:
+                vtimes = proc.cpu_times()
+                # Insert into Red-Black Tree
+                rbt.insert(proc.info['pid'], vtimes.user + vtimes.system, proc.info['name'])
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+
+        # Serialize the tree and emit it
+        tree_data = serialize_tree(rbt.get_root(), rbt.TNULL)
+        socketio.emit('tree_data', {'root': tree_data})  # Emit the tree data to all clients
+        time.sleep(SLEEP_INTERVAL)
 
 @app.route('/')
 def index():
@@ -328,6 +524,7 @@ if __name__ == '__main__':
     threading.Thread(target=get_core_times, daemon=True).start()
     threading.Thread(target=track_cpu_migrations, daemon=True).start()
     threading.Thread(target=monitor_process_states, daemon=True).start()
+    threading.Thread(target=get_process_vtimes, daemon=True).start()
 
     # Change port to avoid conflicts and handle exceptions gracefully.
     try:
