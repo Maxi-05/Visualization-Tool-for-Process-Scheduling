@@ -488,9 +488,10 @@ def get_process_vtimes():
     """
     Collects the virtual memory times (vtimes) of all processes and inserts them into a Red-Black Tree.
     """
-    rbt = RedBlackTree()
+    
 
     while True:
+        rbt = RedBlackTree()
         for proc in psutil.process_iter(['pid', 'name', 'cpu_times']):
             try:
                 vtimes = proc.cpu_times()
