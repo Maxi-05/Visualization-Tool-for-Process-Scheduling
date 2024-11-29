@@ -24,46 +24,35 @@ const Plot6 = () => {
   const formatTreeData = (node) => {
     if (!node) return null;
     return {
-      name: `${node.name} (${node.pid})`,
-      attributes: {
-        vruntime: node.vruntime,
-        color: node.color,
-      },
+      name: `${node.pid}`, // Display only PID in the circle
+      attributes: {},
       children: [formatTreeData(node.left), formatTreeData(node.right)].filter(
         (child) => child !== null
       ),
+      nodeColor: node.color === "black" ? "green" : node.color,// Pass node color for customization
+      nodeRadius: Math.max(10, String(node.pid).length * 10),// Example: Radius based on PID value
     };
   };
 
   // Render the tree
   return (
-    <div style={{ width: "100%", height: "500px" }}>
+    <div className="processes" style={{ width: "100%", height: "500px" }}>
+      <h2>CFS Tree</h2>
       {treeData ? (
         <Tree
           data={treeData}
           orientation="vertical"
           pathFunc="straight"
-          nodeSvgShape={{
-            shape: "circle",
-            shapeProps: {
-              r: 10,
-              fill: "black",
-            },
-          }}
-          styles={{
-            nodes: {
-              node: {
-                circle: { fill: "black" },
-                name: { fill: "white" },
-                attributes: { fill: "lightgray" },
-              },
-              leafNode: {
-                circle: { fill: "red" },
-                name: { fill: "white" },
-                attributes: { fill: "lightgray" },
-              },
-            },
-          }}
+          // Dynamically set the node color, radius, and PID text
+          renderCustomNodeElement={({ nodeDatum }) => (
+            <g style={{color:"white"}}>
+              <circle
+                r={nodeDatum.nodeRadius || 10} // Dynamic radius based on nodeRadius
+                fill={nodeDatum.nodeColor} // Dynamic color
+              />
+               <text className="node-text">{nodeDatum.name}</text>
+            </g>
+          )}
         />
       ) : (
         <p>Loading tree data...</p>

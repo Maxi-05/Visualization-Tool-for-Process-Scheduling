@@ -42,7 +42,7 @@ function Plot5() {
   
 
   return (
-    <div className="process-states">
+    <div className="processes">
       <h2>Process State Visualization</h2>
 
       {/* Custom Legend */}
