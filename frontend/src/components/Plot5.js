@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import io from 'socket.io-client';
 
 const socket = io('http://127.0.0.1:5000'); // Replace with your server address
 
 function Plot5() {
-  const [processStates, setProcessStates] = useState({}); // State to store data from the socket
+  const [processStates, setProcessStates] = useState({});
 
   // Colors for different states
   const stateColors = {
@@ -15,34 +15,36 @@ function Plot5() {
     default: '#8884d8',  // Default color for unknown states
   };
 
-  // Fetch data from the socket
   useEffect(() => {
     socket.on('process_states', (data) => {
-      setProcessStates(data); // Update process states when data is received
+      setProcessStates(data);
     });
 
     return () => {
-      socket.off('process_states'); // Cleanup listener when component unmounts
+      socket.off('process_states'); // Cleanup listener
     };
   }, []);
 
-  // Transform processStates into chart data with proper time stacking
+  // Transform processStates into chart data
   const transformedData = Object.entries(processStates).map(([pid, process]) => {
-    const dataEntry = { name: process.name }; // Initialize with process name
-    const totalDuration = process.states.reduce((sum, state) => sum + state.duration, 0);
-  
-    // Add each state's normalized duration to the data entry
+    const dataEntry = { name: `${process.name}` }; // Include PID in the name for clarity
+
     process.states.forEach((state, index) => {
-      const stateKey = `${state.state}-${index}`;
-      dataEntry[stateKey] = totalDuration > 0 ? state.duration / totalDuration : 0;
+      // Create a unique key using state name, index, and pid
+      const key = `${state.state}_${index}_pid${pid}`;
+      dataEntry[key] = state.duration;
     });
-  
+
     return dataEntry;
   });
-  
+
+  // Collect all unique state keys across all processes
+  const allStateKeys = Array.from(
+    new Set(transformedData.flatMap(data => Object.keys(data).filter(key => key !== 'name')))
+  );
 
   return (
-    <div className="process-states">
+    <div className="processes">
       <h2>Process State Visualization</h2>
 
       {/* Custom Legend */}
@@ -54,42 +56,44 @@ function Plot5() {
         ))}
       </div>
 
-      {/* Bar Chart */}
-      <BarChart
-        width={600}
-        height={400}
-        data={transformedData}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis domain={[0, 'auto']} />
-        <Tooltip />
-        {/* <Legend /> */}
+      {/* Render chart only if there's valid data */}
+      {transformedData.length > 0 ? (
+        <BarChart
+          width={600}
+          height={400}
+          data={transformedData}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 60,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" 
+            angle={-45}
+            textAnchor='end'
+          />
+          <YAxis domain={[0, 'auto']} />
+          <Tooltip />
 
-        {/* Dynamically generate bars for each state-index */}
-        {transformedData.length > 0 &&
-          Object.keys(transformedData[0])
-            .filter(key => key !== 'name') // Exclude the name field
-            .map((key) => {
-              // Extract the state from the key (e.g., running-0 or sleeping-1)
-              const [state, index] = key.split('-');
-              return (
-                <Bar
-                  key={key}
-                  dataKey={key}  // Use unique key based on state-index
-                  stackId="a"    // Stack bars
-                  fill={stateColors[state] || stateColors.default}  // Use color for the state
-                  barSize={20}
-                />
-              );
-            })}
-      </BarChart>
+          {/* Dynamically generate bars for each unique state */}
+          {allStateKeys.map((key) => {
+            const stateType = key.split('_')[0]; // Extract state type (e.g., "running", "sleeping")
+            return (
+              <Bar
+                key={key}
+                dataKey={key}
+                stackId="a"
+                fill={stateColors[stateType] || stateColors.default}
+                barSize={20}
+              />
+            );
+          })}
+        </BarChart>
+      ) : (
+        <p>No data available to display.</p>
+      )}
     </div>
   );
 }

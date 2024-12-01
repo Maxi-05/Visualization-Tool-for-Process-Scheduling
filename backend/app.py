@@ -314,12 +314,16 @@ def monitor_process_states():
                         'end_time': current_time_s,
                         'duration': 0  # Initial duration
                     })
+                process_states[pid]['states'] = [
+                    state for state in process_states[pid]['states']
+                    if state['end_time'] > start_time  # Keep states within TIME_RANGE
+                ]
                     
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
 
         emit_process_states = {}
-        if time.time() - last_emit_time >= 1:
+        if time.time() - last_emit_time >= 2:
             for pid, data in process_states.items():
                 total_duration = 0
                 adjusted_states = []
