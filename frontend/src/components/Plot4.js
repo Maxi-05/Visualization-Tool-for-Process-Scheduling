@@ -155,7 +155,7 @@ const Plot4 = () => {
 
   return (
     <div>
-      <h1>COREWISE Usage</h1>
+      <h1>CPU Core Utilization</h1>
       {cpuData.length === 0 ? (
         <p>Loading data...</p>
       ) : (

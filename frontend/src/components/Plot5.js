@@ -45,56 +45,66 @@ function Plot5() {
 
 
   return (
-    <div className="processes">
-      <h2>Process State Visualization</h2>
+    <div className="processes" style={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
+      <div style={{ textAlign: 'center', width: '80%', maxWidth: '800px' }}>
+        <h1>Dynamic 'Process-State' Tracking</h1>
 
-      {/* Custom Legend */}
-      <div className="legend">
-        {Object.entries(stateColors).map(([state, color]) => (
-          <span key={state} style={{ color, marginRight: '10px' }}>
-            ● {state}
-          </span>
-        ))}
+        {/* Custom Legend */}
+        <div className="legend" style={{ marginBottom: '20px' }}>
+          {Object.entries(stateColors).map(([state, color]) => (
+            <span key={state} style={{ marginRight: '10px', display: 'inline-flex', alignItems: 'center' }}>
+              <div
+                style={{
+                  width: '20px',  // Set the width of the rectangle
+                  height: '10px', // Set the height of the rectangle
+                  backgroundColor: color, // Set the background color to the respective color
+                  marginRight: '5px' // Space between the rectangle and the label
+                }}
+              ></div>
+              {state}
+            </span>
+          ))}
+        </div>
+
+        {/* Render chart only if there's valid data */}
+        {transformedData.length > 0 ? (
+          <BarChart
+            width={600}
+            height={400}
+            data={transformedData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 60,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" 
+              angle={-45}
+              textAnchor='end'
+            />
+            <YAxis domain={[0, 'auto']} />
+            <Tooltip />
+
+            {/* Dynamically generate bars for each unique state */}
+            {allStateKeys.map((key) => {
+              const stateType = key.split('_')[0]; // Extract state type (e.g., "running", "sleeping")
+              return (
+                <Bar
+                  key={key}
+                  dataKey={key}
+                  stackId="a"
+                  fill={stateColors[stateType] || stateColors.default}
+                  barSize={20}
+                />
+              );
+            })}
+          </BarChart>
+        ) : (
+          <p>No data available to display.</p> // Display message if no valid
+        )}
       </div>
-
-      {/* Render chart only if there's valid data */}
-      {transformedData.length > 0 ? (
-        <BarChart
-          width={600}
-          height={400}
-          data={transformedData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 60,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" 
-            angle={-45}
-            textAnchor='end'
-          />
-          <YAxis domain={[0, 'auto']} />
-          <Tooltip />
-
-          {/* Dynamically generate bars for each unique state */}
-          {allStateKeys.map((key) => {
-            const stateType = key.split('_')[0]; // Extract state type (e.g., "running", "sleeping")
-            return (
-              <Bar
-                key={key}
-                dataKey={key}
-                stackId="a"
-                fill={stateColors[stateType] || stateColors.default}
-                barSize={20}
-              />
-            );
-          })}
-        </BarChart>
-      ) : (
-        <p>No data available to display.</p> // Display message if no valid
-      )}
     </div>
   );
 }
