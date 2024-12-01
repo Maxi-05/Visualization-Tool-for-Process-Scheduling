@@ -117,7 +117,7 @@ This plot shows the top 5 high-load processes in the system. The x-axis represen
         \centering
         \includegraphics[width=\textwidth]{logos and images/plot2_2.png}
     \end{minipage}
-    \caption{}
+    \caption{Snapshots of the activity tracker at two different instances}
 \end{figure}
 
 This plot displays a real-time visualization of the activity of processes over multiple snapshots, represented by a stacked bar chart. Each bar in the chart corresponds to a snapshot of processes, showing whether each process (identified by its PID) was active at that moment. The chart uses distinct colors for each process, making it easy to track process activity over time. The x-axis represents different snapshots, while the y-axis shows the number of processes. This visualization helps in monitoring the system’s process behavior, observing trends, and identifying active or idle processes in real time.
@@ -1075,14 +1075,14 @@ The JSON data sent to the frontend provides information of CPU migrations of dif
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/top5_1.png}
+        \includegraphics[width=\textwidth]{logos and images/gantt_1.png}
     \end{minipage}
     \hfill
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/top5_2.png}
+        \includegraphics[width=\textwidth]{logos and images/gantt_2.png}
     \end{minipage}
-    \caption{Top 5 High-Load Processes at different time instances}
+    \caption{Gantt Chart at different time instances}
 \end{figure}
 
  The Gantt chart shows the state changes of each process over time as vertical segments. Each process is represented on the x-axis, and its state transitions (running, sleeping, or idle) are shown as colored segments along the y-axis. The height of each segment represents the duration of the state, allowing you to observe how a process's behavior changes over the given time range. This layout highlights time distribution across multiple processes.
@@ -1314,17 +1314,7 @@ This plot can be particularly valuable for:
 \end{itemize}
 Overall, the plot serves as an essential tool for monitoring and improving system performance, making it easier to track process behavior over time and make informed decisions based on real-time data.
 
-\subsection{navyaplot}
-\subsubsection{Frontend Implementation}
-\subsubsection{Backend Implementation}
-\subsubsection{Data used for the plot}
-Mention what all data is used.
-\subsubsection{Challenges faced}
-\subsubsection{Uses of the plot}
-
-\bigskip
-Please follow the same format for the remaining plots.
-\subsection{Plot Name}
+\subsection{CFS Tree}
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.45\textwidth}
@@ -1338,10 +1328,22 @@ Please follow the same format for the remaining plots.
     \end{minipage}
     \caption{Caption for the plot}
 \end{figure}
- Write a brief description of the plot here.
 \subsubsection{Frontend Implementation}
 \subsubsection{Backend Implementation}
 \subsubsection{Data used for the plot}
+Mention what all data is used.
 \subsubsection{Challenges faced}
 \subsubsection{Uses of the plot}
+
+\begin{itemize}
+    \item \textbf{Visualization of Scheduler Behavior:} 
+    The CFS tree organizes processes based on their \textit{vruntime}, which reflects the amount of CPU time they have consumed relative to others. Displaying this tree helps visualize how the scheduler prioritizes processes. The project can show which processes are ``closer'' to being scheduled next, offering a clear view of scheduling fairness.
+
+    \item \textbf{Understanding Process Prioritization:} 
+    The CFS ensures fairness by scheduling the process with the smallest \textit{vruntime} first. Displaying the tree can help explain why certain processes are scheduled ahead of others and how their priorities evolve over time.
+
+    \item \textbf{Performance Analysis and Optimization:} 
+    By analyzing the CFS tree, users can identify processes with disproportionate \textit{vruntime} values, which might indicate bottlenecks or inefficiencies in resource allocation.
+\end{itemize}
+
 \end{document}
