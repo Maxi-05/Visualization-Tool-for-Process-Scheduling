@@ -38,11 +38,11 @@ function App() {
     <Router>
       <div className="App">
         <header>
-          <h1>Process Scheduling Visualization Tool</h1>
+          <h1 style={{ fontSize: '40px', color: '#00796b' }}>Process Scheduling Visualization Tool</h1>
           <nav className="nav">
-        <Link to="/">Home</Link>|
-        <Link to="/tree">View Full Tree</Link>
-      </nav>
+            <Link to="/">Home</Link>|
+            <Link to="/tree">View Full Tree</Link>
+          </nav>
         </header>
         <main>
           <Routes>

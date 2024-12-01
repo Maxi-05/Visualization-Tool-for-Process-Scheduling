@@ -35,7 +35,7 @@ function Plot2({ processes }) {
 
   // Prepare data for Chart.js
   const chartData = {
-    labels: queue.map((_, index) => `Snapshot ${index}`),
+    labels: queue.map((_, index) => `t = ${index-5}`),
     datasets: Array.from(colorMap.keys()).map((pid) => ({
       label: `PID: ${pid}`,
       data: queue.map((snapshot) =>
@@ -89,6 +89,7 @@ function Plot2({ processes }) {
 
   return (
     <div className="processes" style={{ height: "400px" }}>
+      <h1>CPU-Usage Stream</h1>
       <Bar data={chartData} options={chartOptions} plugins={[ChartDataLabels]} />
     </div>
   );

@@ -125,7 +125,7 @@ const Plot3 = () => {
   console.log(numCore);
   return (
     <div className="plot3-container">
-      <h1>Process Migration Model</h1>
+      <h1>Dynamic Core Migration</h1>
       <div className="containers">
         
         {Array.from({length: numCore}, (_ , core) => (

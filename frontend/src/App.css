@@ -1,6 +1,6 @@
 /* Full-height App container */
 .App {
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   flex-direction: column;
 }
@@ -32,7 +32,7 @@ h1 {
 /* Footer styles */
 footer {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 0px;
   padding: 20px;
   background-color: #004d40;
   color: white;
