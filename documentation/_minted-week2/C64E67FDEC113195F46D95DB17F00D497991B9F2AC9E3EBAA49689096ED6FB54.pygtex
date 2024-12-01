@@ -1,0 +1,100 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{import}\PYG{+w}{ }\PYG{n+nx}{React}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{useEffect}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k+kr}{from}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}react\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{import}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{Line}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k+kr}{from}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}react\PYGZhy{}chartjs\PYGZhy{}2\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{import}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{Chart}\PYG{+w}{ }\PYG{k+kr}{as}\PYG{+w}{ }\PYG{n+nx}{ChartJS}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{Title}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{Tooltip}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{LineElement}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{PointElement}\PYG{p}{,}
+\PYG{+w}{         }\PYG{n+nx}{CategoryScale}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{LinearScale}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{Filler}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k+kr}{from}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}chart.js\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{import}\PYG{+w}{ }\PYG{n+nx}{io}\PYG{+w}{ }\PYG{k+kr}{from}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}socket.io\PYGZhy{}client\PYGZsq{}}\PYG{p}{;}
+\PYG{n+nx}{ChartJS}\PYG{p}{.}\PYG{n+nx}{register}\PYG{p}{(}\PYG{n+nx}{Title}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{Tooltip}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{LineElement}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{PointElement}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{CategoryScale}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{LinearScale}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{Filler}\PYG{p}{);}
+
+\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{Plot4}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{  }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nx}{cpuData}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{setCpuData}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{p}{([]);}
+
+\PYG{+w}{  }\PYG{n+nx}{useEffect}\PYG{p}{(()}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{socket}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{io}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}http://localhost:5000\PYGZsq{}}\PYG{p}{);}
+
+\PYG{+w}{    }\PYG{n+nx}{socket}\PYG{p}{.}\PYG{n+nx}{on}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}times\PYGZsq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nx}{data}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{Array}\PYG{p}{.}\PYG{n+nx}{isArray}\PYG{p}{(}\PYG{n+nx}{data}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n+nx}{data}\PYG{p}{.}\PYG{n+nx}{length}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n+nx}{setCpuData}\PYG{p}{(}\PYG{n+nx}{data}\PYG{p}{);}
+\PYG{+w}{      }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{});}
+
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{n+nx}{socket}\PYG{p}{.}\PYG{n+nx}{disconnect}\PYG{p}{();}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{};}
+\PYG{+w}{  }\PYG{p}{\PYGZcb{},}\PYG{+w}{ }\PYG{p}{[]);}
+
+\PYG{+w}{  }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{aggregateOverallData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nx}{data}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{aggregatedData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{n+nx}{user\PYGZus{}time}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n+nx}{system\PYGZus{}time}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n+nx}{nice\PYGZus{}time}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n+nx}{irq\PYGZus{}time}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n+nx}{softirq\PYGZus{}time}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n+nx}{iowait\PYGZus{}time}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{,}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{    }\PYG{n+nx}{data}\PYG{p}{.}\PYG{n+nx}{forEach}\PYG{p}{(}\PYG{n+nx}{item}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{core}\PYG{+w}{ }\PYG{o}{!==}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}all\PYGZsq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n+nx}{aggregatedData}\PYG{p}{.}\PYG{n+nx}{user\PYGZus{}time}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{user\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nx}{aggregatedData}\PYG{p}{.}\PYG{n+nx}{system\PYGZus{}time}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{system\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nx}{aggregatedData}\PYG{p}{.}\PYG{n+nx}{nice\PYGZus{}time}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{nice\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nx}{aggregatedData}\PYG{p}{.}\PYG{n+nx}{irq\PYGZus{}time}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{irq\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nx}{aggregatedData}\PYG{p}{.}\PYG{n+nx}{softirq\PYGZus{}time}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{softirq\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n+nx}{aggregatedData}\PYG{p}{.}\PYG{n+nx}{iowait\PYGZus{}time}\PYG{+w}{ }\PYG{o}{+=}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{iowait\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{;}
+\PYG{+w}{      }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{});}
+
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nx}{aggregatedData}\PYG{p}{;}
+\PYG{+w}{  }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{  }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{generateChartData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nx}{cpuData}\PYG{p}{.}\PYG{n+nx}{length}\PYG{+w}{ }\PYG{o}{===}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{\PYGZob{}\PYGZcb{};}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{overallData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{aggregateOverallData}\PYG{p}{(}\PYG{n+nx}{cpuData}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{labels}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{cpuData}\PYG{p}{.}\PYG{n+nx}{map}\PYG{p}{(}\PYG{n+nx}{item}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{core}\PYG{+w}{ }\PYG{o}{===}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}all\PYGZsq{}}\PYG{+w}{ }\PYG{o}{?}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}Overall\PYGZsq{}}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n+nx}{Core}\PYG{+w}{ }\PYG{n+nx}{\PYGZdl{}}\PYG{p}{\PYGZob{}}\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{core}\PYG{p}{\PYGZcb{}));}
+
+\PYG{+w}{    }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{chartData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{n+nx}{labels}\PYG{o}{:}\PYG{+w}{ }\PYG{n+nx}{labels}\PYG{p}{,}
+\PYG{+w}{      }\PYG{n+nx}{datasets}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{[}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{          }\PYG{n+nx}{label}\PYG{o}{:}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}User Time\PYGZsq{}}\PYG{p}{,}
+\PYG{+w}{          }\PYG{n+nx}{data}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{[...}\PYG{n+nx}{cpuData}\PYG{p}{.}\PYG{n+nx}{map}\PYG{p}{(}\PYG{n+nx}{item}\PYG{+w}{ }\PYG{p}{=\PYGZgt{}}\PYG{+w}{ }\PYG{n+nx}{item}\PYG{p}{.}\PYG{n+nx}{user\PYGZus{}time}\PYG{+w}{ }\PYG{o}{||}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{p}{),}\PYG{+w}{ }\PYG{n+nx}{overallData}\PYG{p}{.}\PYG{n+nx}{user\PYGZus{}time}\PYG{p}{],}
+\PYG{+w}{          }\PYG{n+nx}{borderColor}\PYG{o}{:}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}green\PYGZsq{}}\PYG{p}{,}
+\PYG{+w}{          }\PYG{n+nx}{backgroundColor}\PYG{o}{:}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}rgba(0, 255, 0, 0.2)\PYGZsq{}}\PYG{p}{,}
+\PYG{+w}{          }\PYG{n+nx}{fill}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kc}{true}\PYG{p}{,}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{},}
+
+\PYG{+w}{      }\PYG{p}{],}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nx}{chartData}\PYG{p}{;}
+\PYG{+w}{  }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{  }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{chartOptions}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nx}{responsive}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kc}{true}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nx}{scales}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{      }\PYG{n+nx}{x}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{title}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{display}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kc}{true}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{text}\PYG{o}{:}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}CPU Cores\PYGZsq{}}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{      }\PYG{n+nx}{y}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n+nx}{title}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{display}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kc}{true}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{text}\PYG{o}{:}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}Percentage Used\PYGZsq{}}\PYG{+w}{ }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{        }\PYG{n+nx}{beginAtZero}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kc}{true}\PYG{p}{,}
+\PYG{+w}{        }\PYG{n+nx}{max}\PYG{o}{:}\PYG{+w}{ }\PYG{l+m+mf}{100}\PYG{p}{,}
+\PYG{+w}{      }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{  }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{  }\PYG{k}{return}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{    }\PYG{o}{\PYGZlt{}}\PYG{n+nx}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{      }\PYG{o}{\PYGZlt{}}\PYG{n+nx}{h1}\PYG{o}{\PYGZgt{}}\PYG{n+nx}{Per}\PYG{+w}{ }\PYG{n+nx}{CORE}\PYG{+w}{ }\PYG{n+nx}{Usage}\PYG{o}{\PYGZlt{}}\PYG{err}{/h1\PYGZgt{}}
+\PYG{+w}{      }\PYG{p}{\PYGZob{}}\PYG{n+nx}{cpuData}\PYG{p}{.}\PYG{n+nx}{length}\PYG{+w}{ }\PYG{o}{===}\PYG{+w}{ }\PYG{l+m+mf}{0}\PYG{+w}{ }\PYG{o}{?}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{        }\PYG{o}{\PYGZlt{}}\PYG{n+nx}{p}\PYG{o}{\PYGZgt{}}\PYG{n+nx}{Loading}\PYG{+w}{ }\PYG{n+nx}{data}\PYG{p}{...}\PYG{o}{\PYGZlt{}}\PYG{err}{/p\PYGZgt{}}
+\PYG{+w}{      }\PYG{p}{)}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{        }\PYG{o}{\PYGZlt{}}\PYG{n+nx}{Line}\PYG{+w}{ }\PYG{n+nx}{data}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n+nx}{generateChartData}\PYG{p}{()\PYGZcb{}}\PYG{+w}{ }\PYG{n+nx}{options}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n+nx}{chartOptions}\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{/\PYGZgt{}}
+\PYG{+w}{      }\PYG{p}{)\PYGZcb{}}
+\PYG{+w}{    }\PYG{o}{\PYGZlt{}}\PYG{err}{/div\PYGZgt{}}
+\PYG{+w}{  }\PYG{p}{);}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{k}{export}\PYG{+w}{ }\PYG{k}{default}\PYG{+w}{ }\PYG{n+nx}{Plot4}\PYG{p}{;}
+\end{Verbatim}

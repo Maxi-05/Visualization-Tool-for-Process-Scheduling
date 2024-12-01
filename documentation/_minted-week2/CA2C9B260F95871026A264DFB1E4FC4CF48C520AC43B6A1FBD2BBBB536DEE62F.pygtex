@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{monitor\PYGZus{}cpu}\PYG{p}{():}
+    \PYG{k}{global} \PYG{n}{process\PYGZus{}data}\PYG{p}{,} \PYG{n}{killed\PYGZus{}processes}
+    \PYG{k}{while} \PYG{k+kc}{True}\PYG{p}{:}
+        \PYG{n}{update\PYGZus{}process\PYGZus{}data}\PYG{p}{()}
+        \PYG{n}{socketio}\PYG{o}{.}\PYG{n}{emit}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}data\PYGZsq{}}\PYG{p}{,} \PYG{n}{process\PYGZus{}data}\PYG{p}{)}
+        \PYG{n}{time}\PYG{o}{.}\PYG{n}{sleep}\PYG{p}{(}\PYG{n}{SLEEP\PYGZus{}INTERVAL}\PYG{p}{)}
+        \PYG{n}{process\PYGZus{}data} \PYG{o}{=} \PYG{p}{[}\PYG{n}{proc} \PYG{k}{for} \PYG{n}{proc} \PYG{o+ow}{in} \PYG{n}{process\PYGZus{}data} \PYG{k}{if} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{]} \PYG{o+ow}{not} \PYG{o+ow}{in}
+                         \PYG{n}{killed\PYGZus{}processes}\PYG{p}{]}
+        \PYG{n}{killed\PYGZus{}processes}\PYG{o}{.}\PYG{n}{clear}\PYG{p}{()}
+\end{Verbatim}

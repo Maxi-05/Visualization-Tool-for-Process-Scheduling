@@ -1,0 +1,153 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{class} \PYG{n+nc}{Node}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{,} \PYG{n}{name}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{key} \PYG{o}{=} \PYG{n}{key}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n}{value}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{name} \PYG{o}{=} \PYG{n}{name}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{k+kc}{None}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{k+kc}{None}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{k+kc}{None}
+
+\PYG{k}{class} \PYG{n+nc}{RedBlackTree}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL} \PYG{o}{=} \PYG{n}{Node}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}
+
+    \PYG{k}{def} \PYG{n+nf}{insert}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{,} \PYG{n}{name}\PYG{p}{):}
+        \PYG{n}{node} \PYG{o}{=} \PYG{n}{Node}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}
+        \PYG{n}{node}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{k+kc}{None}
+        \PYG{n}{node}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}
+        \PYG{n}{node}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}
+        \PYG{n}{node}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}
+
+        \PYG{n}{parent} \PYG{o}{=} \PYG{k+kc}{None}
+        \PYG{n}{current} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root}
+
+        \PYG{k}{while} \PYG{n}{current} \PYG{o}{!=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}\PYG{p}{:}
+            \PYG{n}{parent} \PYG{o}{=} \PYG{n}{current}
+            \PYG{k}{if} \PYG{n}{node}\PYG{o}{.}\PYG{n}{value} \PYG{o}{\PYGZlt{}} \PYG{n}{current}\PYG{o}{.}\PYG{n}{value}\PYG{p}{:}
+                \PYG{n}{current} \PYG{o}{=} \PYG{n}{current}\PYG{o}{.}\PYG{n}{left}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{current} \PYG{o}{=} \PYG{n}{current}\PYG{o}{.}\PYG{n}{right}
+
+        \PYG{n}{node}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{parent}
+        \PYG{k}{if} \PYG{n}{parent} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root} \PYG{o}{=} \PYG{n}{node}
+        \PYG{k}{elif} \PYG{n}{node}\PYG{o}{.}\PYG{n}{value} \PYG{o}{\PYGZlt{}} \PYG{n}{parent}\PYG{o}{.}\PYG{n}{value}\PYG{p}{:}
+            \PYG{n}{parent}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{n}{node}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{parent}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{n}{node}
+
+        \PYG{k}{if} \PYG{n}{node}\PYG{o}{.}\PYG{n}{parent} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n}{node}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+            \PYG{k}{return}
+
+        \PYG{k}{if} \PYG{n}{node}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{return}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fix\PYGZus{}insert}\PYG{p}{(}\PYG{n}{node}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{fix\PYGZus{}insert}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{k}\PYG{p}{):}
+        \PYG{k}{while} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{==} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{right}\PYG{p}{:}
+                \PYG{n}{u} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{left}
+                \PYG{k}{if} \PYG{n}{u}\PYG{o}{.}\PYG{n}{color} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{:}
+                    \PYG{n}{u}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}
+                    \PYG{n}{k} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{n}{k} \PYG{o}{==} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{left}\PYG{p}{:}
+                        \PYG{n}{k} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{k}\PYG{p}{)}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{u} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{right}
+                \PYG{k}{if} \PYG{n}{u}\PYG{o}{.}\PYG{n}{color} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}\PYG{p}{:}
+                    \PYG{n}{u}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}
+                    \PYG{n}{k} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{n}{k} \PYG{o}{==} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{right}\PYG{p}{:}
+                        \PYG{n}{k} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{k}\PYG{p}{)}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+                    \PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}red\PYGZsq{}}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n}{k}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{parent}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{k} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root}\PYG{p}{:}
+                \PYG{k}{break}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root}\PYG{o}{.}\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}black\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf}{left\PYGZus{}rotate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{):}
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{right}
+        \PYG{n}{x}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{n}{y}\PYG{o}{.}\PYG{n}{left}
+        \PYG{k}{if} \PYG{n}{y}\PYG{o}{.}\PYG{n}{left} \PYG{o}{!=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}\PYG{p}{:}
+            \PYG{n}{y}\PYG{o}{.}\PYG{n}{left}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{x}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}
+        \PYG{k}{if} \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root} \PYG{o}{=} \PYG{n}{y}
+        \PYG{k}{elif} \PYG{n}{x} \PYG{o}{==} \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{left}\PYG{p}{:}
+            \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{n}{y}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{n}{y}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{n}{x}
+        \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{y}
+
+    \PYG{k}{def} \PYG{n+nf}{right\PYGZus{}rotate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{):}
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{left}
+        \PYG{n}{x}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{n}{y}\PYG{o}{.}\PYG{n}{right}
+        \PYG{k}{if} \PYG{n}{y}\PYG{o}{.}\PYG{n}{right} \PYG{o}{!=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}\PYG{p}{:}
+            \PYG{n}{y}\PYG{o}{.}\PYG{n}{right}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{x}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}
+        \PYG{k}{if} \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root} \PYG{o}{=} \PYG{n}{y}
+        \PYG{k}{elif} \PYG{n}{x} \PYG{o}{==} \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{right}\PYG{p}{:}
+            \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{n}{y}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent}\PYG{o}{.}\PYG{n}{left} \PYG{o}{=} \PYG{n}{y}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{right} \PYG{o}{=} \PYG{n}{x}
+        \PYG{n}{x}\PYG{o}{.}\PYG{n}{parent} \PYG{o}{=} \PYG{n}{y}
+
+    \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}root}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root}
+
+    \PYG{k}{def} \PYG{n+nf}{inorder\PYGZus{}helper}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{node}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{node} \PYG{o}{!=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{TNULL}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{inorder\PYGZus{}helper}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{left}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{node}\PYG{o}{.}\PYG{n}{key}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{node}\PYG{o}{.}\PYG{n}{value}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ (}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{node}\PYG{o}{.}\PYG{n}{name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{)\PYGZdq{}}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{inorder\PYGZus{}helper}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{right}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{inorder}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{inorder\PYGZus{}helper}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{root}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{serialize\PYGZus{}tree}\PYG{p}{(}\PYG{n}{node}\PYG{p}{,} \PYG{n}{TNULL}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{node} \PYG{o}{==} \PYG{n}{TNULL}\PYG{p}{:}
+        \PYG{k}{return} \PYG{k+kc}{None}
+    \PYG{k}{return} \PYG{p}{\PYGZob{}}
+        \PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{:} \PYG{n}{node}\PYG{o}{.}\PYG{n}{key}\PYG{p}{,}
+        \PYG{l+s+s1}{\PYGZsq{}vruntime\PYGZsq{}}\PYG{p}{:} \PYG{n}{node}\PYG{o}{.}\PYG{n}{value}\PYG{p}{,}
+        \PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{:} \PYG{n}{node}\PYG{o}{.}\PYG{n}{name}\PYG{p}{,}
+        \PYG{l+s+s1}{\PYGZsq{}color\PYGZsq{}}\PYG{p}{:} \PYG{n}{node}\PYG{o}{.}\PYG{n}{color}\PYG{p}{,}
+        \PYG{l+s+s1}{\PYGZsq{}left\PYGZsq{}}\PYG{p}{:} \PYG{n}{serialize\PYGZus{}tree}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{left}\PYG{p}{,} \PYG{n}{TNULL}\PYG{p}{),}
+        \PYG{l+s+s1}{\PYGZsq{}right\PYGZsq{}}\PYG{p}{:} \PYG{n}{serialize\PYGZus{}tree}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{right}\PYG{p}{,} \PYG{n}{TNULL}\PYG{p}{)}
+    \PYG{p}{\PYGZcb{}}
+
+\PYG{k}{def} \PYG{n+nf}{get\PYGZus{}process\PYGZus{}vtimes}\PYG{p}{():}
+    \PYG{k}{while} \PYG{k+kc}{True}\PYG{p}{:}
+        \PYG{n}{rbt} \PYG{o}{=} \PYG{n}{RedBlackTree}\PYG{p}{()}
+        \PYG{k}{for} \PYG{n}{proc} \PYG{o+ow}{in} \PYG{n}{psutil}\PYG{o}{.}\PYG{n}{process\PYGZus{}iter}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}times\PYGZsq{}}\PYG{p}{]):}
+            \PYG{k}{try}\PYG{p}{:}
+                \PYG{n}{vtimes} \PYG{o}{=} \PYG{n}{proc}\PYG{o}{.}\PYG{n}{cpu\PYGZus{}times}\PYG{p}{()}
+                \PYG{n}{rbt}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{],} \PYG{n}{vtimes}\PYG{o}{.}\PYG{n}{user} \PYG{o}{+} \PYG{n}{vtimes}\PYG{o}{.}\PYG{n}{system}\PYG{p}{,} \PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{])}
+            \PYG{k}{except} \PYG{p}{(}\PYG{n}{psutil}\PYG{o}{.}\PYG{n}{NoSuchProcess}\PYG{p}{,} \PYG{n}{psutil}\PYG{o}{.}\PYG{n}{AccessDenied}\PYG{p}{):}
+                \PYG{k}{continue}
+        \PYG{n}{tree\PYGZus{}data} \PYG{o}{=} \PYG{n}{serialize\PYGZus{}tree}\PYG{p}{(}\PYG{n}{rbt}\PYG{o}{.}\PYG{n}{get\PYGZus{}root}\PYG{p}{(),} \PYG{n}{rbt}\PYG{o}{.}\PYG{n}{TNULL}\PYG{p}{)}
+        \PYG{n}{socketio}\PYG{o}{.}\PYG{n}{emit}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}tree\PYGZus{}data\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}root\PYGZsq{}}\PYG{p}{:} \PYG{n}{tree\PYGZus{}data}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{time}\PYG{o}{.}\PYG{n}{sleep}\PYG{p}{(}\PYG{n}{SLEEP\PYGZus{}INTERVAL}\PYG{p}{)}
+
+\end{Verbatim}

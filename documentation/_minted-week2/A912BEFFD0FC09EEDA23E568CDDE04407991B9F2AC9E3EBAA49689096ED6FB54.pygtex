@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nx}{processes}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{setProcesses}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{p}{(\PYGZob{}\PYGZcb{});}
+\PYG{+w}{        }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nx}{processOrder}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{setProcessOrder}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{p}{([]);}
+\PYG{+w}{        }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nx}{processColors}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{setProcessColors}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{p}{(\PYGZob{}\PYGZcb{});}
+\PYG{+w}{        }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nx}{animations}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{setAnimations}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{p}{(\PYGZob{}\PYGZcb{});}
+\PYG{+w}{        }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{p}{[}\PYG{n+nx}{staticPositions}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{setStaticPositions}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nx}{useState}\PYG{p}{(\PYGZob{}\PYGZcb{});}
+\end{Verbatim}

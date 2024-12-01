@@ -1,0 +1,42 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+ \PYG{k}{def} \PYG{n+nf}{update\PYGZus{}process\PYGZus{}data}\PYG{p}{():}
+    \PYG{k}{global} \PYG{n}{process\PYGZus{}data}\PYG{p}{,} \PYG{n}{killed\PYGZus{}processes}
+
+    \PYG{n}{processes} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{current\PYGZus{}pids} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+
+    \PYG{k}{for} \PYG{n}{proc} \PYG{o+ow}{in} \PYG{n}{psutil}\PYG{o}{.}\PYG{n}{process\PYGZus{}iter}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}create\PYGZus{}time\PYGZsq{}}\PYG{p}{]):}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{current\PYGZus{}pids}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{])}
+            \PYG{n}{processes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}
+                \PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{:} \PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{:} \PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{:} \PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}create\PYGZus{}time\PYGZsq{}}\PYG{p}{:} \PYG{n}{datetime}\PYG{o}{.}\PYG{n}{datetime}\PYG{o}{.}\PYG{n}{fromtimestamp}\PYG{p}{(}
+                \PYG{n}{proc}\PYG{o}{.}\PYG{n}{info}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}create\PYGZus{}time\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{strftime}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZhy{}\PYGZpc{}m\PYGZhy{}}\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s1}{ \PYGZpc{}H:\PYGZpc{}M:\PYGZpc{}S\PYGZsq{}}\PYG{p}{),}
+            \PYG{p}{\PYGZcb{})}
+        \PYG{k}{except} \PYG{p}{(}\PYG{n}{psutil}\PYG{o}{.}\PYG{n}{NoSuchProcess}\PYG{p}{,} \PYG{n}{psutil}\PYG{o}{.}\PYG{n}{AccessDenied}\PYG{p}{):}
+            \PYG{k}{continue}
+
+    \PYG{k}{for} \PYG{n}{proc} \PYG{o+ow}{in} \PYG{n}{processes}\PYG{p}{:}
+        \PYG{n}{pid} \PYG{o}{=} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n}{existing\PYGZus{}proc} \PYG{o}{=} \PYG{n+nb}{next}\PYG{p}{((}\PYG{n}{p} \PYG{k}{for} \PYG{n}{p} \PYG{o+ow}{in} \PYG{n}{process\PYGZus{}data} \PYG{k}{if} \PYG{n}{p}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{]} \PYG{o}{==} \PYG{n}{pid}\PYG{p}{),} \PYG{k+kc}{None}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{existing\PYGZus{}proc}\PYG{p}{:}
+            \PYG{n}{existing\PYGZus{}proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{process\PYGZus{}data}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}
+                \PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{:} \PYG{n}{pid}\PYG{p}{,}
+                \PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{:} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}name\PYGZsq{}}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{:} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}create\PYGZus{}time\PYGZsq{}}\PYG{p}{:} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}create\PYGZus{}time\PYGZsq{}}\PYG{p}{],}
+            \PYG{p}{\PYGZcb{})}
+
+    \PYG{k}{for} \PYG{n}{proc} \PYG{o+ow}{in} \PYG{n}{process\PYGZus{}data}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{]} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{current\PYGZus{}pids}\PYG{p}{:}
+            \PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+            \PYG{n}{killed\PYGZus{}processes}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{proc}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}pid\PYGZsq{}}\PYG{p}{])}
+
+    \PYG{n}{process\PYGZus{}data} \PYG{o}{=} \PYG{n+nb}{sorted}\PYG{p}{(}\PYG{n}{process\PYGZus{}data}\PYG{p}{,} \PYG{n}{key}\PYG{o}{=}\PYG{k}{lambda} \PYG{n}{x}\PYG{p}{:} \PYG{n}{x}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cpu\PYGZus{}percent\PYGZsq{}}\PYG{p}{],}
+                  \PYG{n}{reverse}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)[:}\PYG{n}{NUM\PYGZus{}PROCESSES}\PYG{p}{]}
+\end{Verbatim}
