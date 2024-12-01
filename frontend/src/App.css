@@ -182,3 +182,33 @@ footer a:hover {
 .cores-container .core {
   height: auto;
 }
+.node-text {
+  fill: white; /* Text color */
+  text-anchor: middle; /* Center horizontally */
+  font-size: 10px; /* Font size */
+}
+/* Header styling */
+.header {
+  background-color: #4caf50; /* Green background */
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0; /* Remove default margin */
+}
+
+.nav {
+  margin-top: 10px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  margin: 0 10px;
+}
+
+.nav a:hover {
+  color: #ffffff; /* Light green color on hover */
+}

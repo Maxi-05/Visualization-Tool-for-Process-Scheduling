@@ -43,6 +43,7 @@ function Plot5() {
     new Set(transformedData.flatMap(data => Object.keys(data).filter(key => key !== 'name')))
   );
 
+
   return (
     <div className="processes">
       <h2>Process State Visualization</h2>
@@ -92,7 +93,7 @@ function Plot5() {
           })}
         </BarChart>
       ) : (
-        <p>No data available to display.</p>
+        <p>No data available to display.</p> // Display message if no valid
       )}
     </div>
   );

@@ -39,11 +39,10 @@ function App() {
       <div className="App">
         <header>
           <h1>Process Scheduling Visualization Tool</h1>
-          <nav>
-            <Link to="/">Home</Link>
-            {" | "}
-            <Link to="/tree">View Full Tree</Link>
-          </nav>
+          <nav className="nav">
+        <Link to="/">Home</Link>|
+        <Link to="/tree">View Full Tree</Link>
+      </nav>
         </header>
         <main>
           <Routes>
