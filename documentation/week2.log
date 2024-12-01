@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.15)  1 DEC 2024 23:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.15)  1 DEC 2024 23:50
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1047,63 +1047,35 @@ Package pdftex.def Info: logos and images/PLOT2_2.png  used on input line 123.
  [4
 
  <./logos and images/PLOT1_1.png> <./logos and images/PLOT1_2.png>]
-\openout4 = `week2.pyg'.
-
- (./_minted-week2/default.pygstyle)
-(./_minted-week2/21743807B46771BDFE168AC20B71CCD77991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
- [5 <./logos and images/PLOT2_1.png> <./logos and images/PLOT2_2.png>])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/8D2800DC4ABFA7152038622B00B6D0917991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex [6] [7])
 Underfull \hbox (badness 10000) in paragraph at lines 274--275
 
  []
 
 \openout4 = `week2.pyg'.
 
-
+(./_minted-week2/default.pygstyle)
 (./_minted-week2/CA2C9B260F95871026A264DFB1E4FC4CF48C520AC43B6A1FBD2BBBB536DEE6
-2F.pygtex) [8]
-\openout4 = `week2.pyg'.
+2F.pygtex
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
+ [5 <./logos and images/PLOT2_1.png> <./logos and images/PLOT2_2.png>]) [6] [7]
 
-
-(./_minted-week2/FED363C00CF954F36249D640D4DECCE5F48C520AC43B6A1FBD2BBBB536DEE6
-2F.pygtex [9]) [10]
 Overfull \hbox (13.64201pt too wide) in paragraph at lines 482--483
 []\OT1/cmtt/m/n/12 Decision Making\OT1/cmr/m/n/12 : As-sists sys-tem ad-min-is-
 tra-tors in iden-ti-fy-ing and man-ag-ing resource-
  []
 
-[11]
-<logos and images/HTOP_1.png, id=263, 935.495pt x 519.9425pt>
+<logos and images/HTOP_1.png, id=247, 935.495pt x 519.9425pt>
 File: logos and images/HTOP_1.png Graphic file (type png)
 <use logos and images/HTOP_1.png>
 Package pdftex.def Info: logos and images/HTOP_1.png  used on input line 504.
 (pdftex.def)             Requested size: 217.6621pt x 120.97266pt.
-<logos and images/HTOP_2.png, id=264, 926.46124pt x 511.9125pt>
+<logos and images/HTOP_2.png, id=248, 926.46124pt x 511.9125pt>
 File: logos and images/HTOP_2.png Graphic file (type png)
 <use logos and images/HTOP_2.png>
 Package pdftex.def Info: logos and images/HTOP_2.png  used on input line 509.
 (pdftex.def)             Requested size: 217.6621pt x 120.2682pt.
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/C64E67FDEC113195F46D95DB17F00D497991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
- [12 <./logos and images/HTOP_1.png> <./logos and images/HTOP_2.png>]
-[13])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/315A5CFE8CB035415A5C3252C7F114C4F48C520AC43B6A1FBD2BBBB536DEE6
-2F.pygtex [14] [15])
+[8] [9 <./logos and images/HTOP_1.png> <./logos and images/HTOP_2.png>]
 Overfull \hbox (27.26276pt too wide) in paragraph at lines 728--729
 []\OT1/cmr/bx/n/12 Data Re-trieval: \OT1/cmr/m/n/12 Re-trieves per-core CPU tim
 es us-ing \OT1/cmtt/m/n/12 psutil.cpu[]times(percpu=True)\OT1/cmr/m/n/12 . 
@@ -1117,13 +1089,13 @@ Overfull \hbox (26.96208pt too wide) in paragraph at lines 731--732
 /n/12 , \OT1/cmtt/m/n/12 softirq[]all\OT1/cmr/m/n/12 ,
  []
 
-[16] [17]
-<logos and images/MIG_1.png, id=293, 488.82625pt x 443.6575pt>
+[10] [11]
+<logos and images/MIG_1.png, id=267, 488.82625pt x 443.6575pt>
 File: logos and images/MIG_1.png Graphic file (type png)
 <use logos and images/MIG_1.png>
 Package pdftex.def Info: logos and images/MIG_1.png  used on input line 794.
 (pdftex.def)             Requested size: 217.6621pt x 197.5522pt.
-<logos and images/MIG_2.png, id=294, 480.79625pt x 447.6725pt>
+<logos and images/MIG_2.png, id=268, 480.79625pt x 447.6725pt>
 File: logos and images/MIG_2.png Graphic file (type png)
 <use logos and images/MIG_2.png>
 Package pdftex.def Info: logos and images/MIG_2.png  used on input line 799.
@@ -1132,81 +1104,32 @@ Package pdftex.def Info: logos and images/MIG_2.png  used on input line 799.
 
 
 (./_minted-week2/A912BEFFD0FC09EEDA23E568CDDE04407991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex [18 <./logos and images/MIG_1.png> <./logos and images/MIG_2.png>])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/D6766C557C1DF876EAAA9BC8B252F5107991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex [19])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/C3DC10B56ACEE9BE318EFAFF9A7D03F27991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex [20] [21])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/B5AC0736A9E3E7737B9DE157FAE773CFF48C520AC43B6A1FBD2BBBB536DEE6
-2F.pygtex [22])
+54.pygtex) [12 <./logos and images/MIG_1.png> <./logos and images/MIG_2.png>]
 Overfull \hbox (56.51582pt too wide) in paragraph at lines 1035--1036
 []\OT1/cmr/m/n/12 Handles ex-cep-tions like FileNot-FoundEr-ror, psu-til.Access
 Denied, and psu-til.NoSuchProcess
  []
 
-[23]
-<logos and images/GANTT_1.png, id=337, 593.21625pt x 540.0175pt>
+[13]
+<logos and images/GANTT_1.png, id=293, 593.21625pt x 540.0175pt>
 File: logos and images/GANTT_1.png Graphic file (type png)
 <use logos and images/GANTT_1.png>
 Package pdftex.def Info: logos and images/GANTT_1.png  used on input line 1088.
 
 (pdftex.def)             Requested size: 217.6621pt x 198.13885pt.
-<logos and images/GANTT_2.png, id=338, 629.35126pt x 533.995pt>
+<logos and images/GANTT_2.png, id=294, 629.35126pt x 533.995pt>
 File: logos and images/GANTT_2.png Graphic file (type png)
 <use logos and images/GANTT_2.png>
 Package pdftex.def Info: logos and images/GANTT_2.png  used on input line 1093.
 
 (pdftex.def)             Requested size: 217.6621pt x 184.67662pt.
- [24]
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/06E69796E51663D851C7EE27C375BFAF7991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex [25 <./logos and images/GANTT_1.png> <./logos and images/GANTT_2.png>
-]
-
-! LaTeX Error: Unicode character ● (U+25CF)
-               not set up for use with LaTeX.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.52 ...GZob{}}\PYG{n+nx}{state}\PYG{p}{\PYGZcb{}}
-                                                  
-? R
-OK, entering \nonstopmode...
-[26])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/4ED170C7942EEEEF577FE094202B2351F48C520AC43B6A1FBD2BBBB536DEE6
-2F.pygtex [27] [28]) [29]
-<logos and images/CFS_1.png, id=371, 850.17625pt x 543.02875pt>
+ [14] [15 <./logos and images/GANTT_1.png> <./logos and images/GANTT_2.png>]
+<logos and images/CFS_1.png, id=311, 850.17625pt x 543.02875pt>
 File: logos and images/CFS_1.png Graphic file (type png)
 <use logos and images/CFS_1.png>
 Package pdftex.def Info: logos and images/CFS_1.png  used on input line 1332.
 (pdftex.def)             Requested size: 386.95894pt x 247.16132pt.
- [30]
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/23B8C2995A9A3A8FDA315FC64F4475397991B9F2AC9E3EBAA49689096ED6FB
-54.pygtex [31 <./logos and images/CFS_1.png>] [32])
-\openout4 = `week2.pyg'.
-
-
-(./_minted-week2/F2800E97650ACC6DAB75149F9A054922F48C520AC43B6A1FBD2BBBB536DEE6
-2F.pygtex [33] [34] [35]) [36] [37] (./week2.aux)
+ [16] [17 <./logos and images/CFS_1.png>] [18] [19] (./week2.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -1217,24 +1140,22 @@ runsystem(rm week2.pyg)...executed.
 
  ) 
 Here is how much of TeX's memory you used:
- 26195 strings out of 474116
- 500499 string characters out of 5743682
+ 26086 strings out of 474116
+ 493072 string characters out of 5743682
  1941187 words of memory out of 5000000
- 47970 multiletter control sequences out of 15000+600000
- 565694 words of font info for 64 fonts, out of 8000000 for 9000
+ 47917 multiletter control sequences out of 15000+600000
+ 565358 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,8n,93p,960b,913s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,8n,93p,960b,904s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></
-usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></u
-sr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></us
-r/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on week2.pdf (37 pages, 503410 bytes).
+usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></u
+sr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on week2.pdf (19 pages, 449565 bytes).
 PDF statistics:
- 465 PDF objects out of 1000 (max. 8388607)
- 384 compressed objects within 4 object streams
- 99 named destinations out of 1000 (max. 500000)
+ 375 PDF objects out of 1000 (max. 8388607)
+ 316 compressed objects within 4 object streams
+ 81 named destinations out of 1000 (max. 500000)
  361 words of extra memory for PDF output out of 10000 (max. 10000000)
 

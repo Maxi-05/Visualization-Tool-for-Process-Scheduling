@@ -6,31 +6,31 @@
 \contentsline {subsection}{\numberline {2.1}CPU usage by Process}{4}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}CPU-Usage Stream}{5}{subsection.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.1}Frontend Implementation}{5}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Backend Implementation}{8}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}Data used for the plot}{10}{subsubsection.2.2.3}%
-\contentsline {subsubsection}{\numberline {2.2.4}Challenges faced}{11}{subsubsection.2.2.4}%
-\contentsline {subsubsection}{\numberline {2.2.5}Uses of the plot}{11}{subsubsection.2.2.5}%
-\contentsline {subsection}{\numberline {2.3}CPU Core Utilization}{12}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Frontend Implementation}{12}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Backend Implementation}{15}{subsubsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.3}Data used for the plot}{17}{subsubsection.2.3.3}%
-\contentsline {subsubsection}{\numberline {2.3.4}Challenges faced}{17}{subsubsection.2.3.4}%
-\contentsline {subsubsection}{\numberline {2.3.5}Uses of the plot}{18}{subsubsection.2.3.5}%
-\contentsline {subsection}{\numberline {2.4}Dynamic Core Migration}{18}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Frontend Implementation}{18}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Backend Implementation}{22}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Data used for the plot}{24}{subsubsection.2.4.3}%
-\contentsline {subsubsection}{\numberline {2.4.4}Challenges faced}{24}{subsubsection.2.4.4}%
-\contentsline {subsubsection}{\numberline {2.4.5}Uses of the plot}{24}{subsubsection.2.4.5}%
-\contentsline {subsection}{\numberline {2.5}Dynamic 'Process-State' Tracking}{25}{subsection.2.5}%
-\contentsline {subsubsection}{\numberline {2.5.1}Frontend Implementation}{25}{subsubsection.2.5.1}%
-\contentsline {subsubsection}{\numberline {2.5.2}Backend Implementation}{27}{subsubsection.2.5.2}%
-\contentsline {subsubsection}{\numberline {2.5.3}Data used for the plot}{29}{subsubsection.2.5.3}%
-\contentsline {subsubsection}{\numberline {2.5.4}Challenges faced}{29}{subsubsection.2.5.4}%
-\contentsline {subsubsection}{\numberline {2.5.5}Uses of the plot}{30}{subsubsection.2.5.5}%
-\contentsline {subsection}{\numberline {2.6}CFS - Process Scheduling Tree}{31}{subsection.2.6}%
-\contentsline {subsubsection}{\numberline {2.6.1}Frontend Implementation}{31}{subsubsection.2.6.1}%
-\contentsline {subsubsection}{\numberline {2.6.2}Backend Implementation}{33}{subsubsection.2.6.2}%
-\contentsline {subsubsection}{\numberline {2.6.3}Data used for the plot}{36}{subsubsection.2.6.3}%
-\contentsline {subsubsection}{\numberline {2.6.4}Challenges faced}{37}{subsubsection.2.6.4}%
-\contentsline {subsubsection}{\numberline {2.6.5}Uses of the plot}{37}{subsubsection.2.6.5}%
+\contentsline {subsubsection}{\numberline {2.2.2}Backend Implementation}{5}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Data used for the plot}{7}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Challenges faced}{7}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}Uses of the plot}{8}{subsubsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.3}CPU Core Utilization}{9}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Frontend Implementation}{9}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Backend Implementation}{10}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Data used for the plot}{10}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Challenges faced}{11}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}Uses of the plot}{11}{subsubsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.4}Dynamic Core Migration}{12}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Frontend Implementation}{12}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Backend Implementation}{13}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Data used for the plot}{14}{subsubsection.2.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.4}Challenges faced}{14}{subsubsection.2.4.4}%
+\contentsline {subsubsection}{\numberline {2.4.5}Uses of the plot}{14}{subsubsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.5}Dynamic 'Process-State' Tracking}{15}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Frontend Implementation}{15}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Backend Implementation}{15}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Data used for the plot}{15}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Challenges faced}{15}{subsubsection.2.5.4}%
+\contentsline {subsubsection}{\numberline {2.5.5}Uses of the plot}{16}{subsubsection.2.5.5}%
+\contentsline {subsection}{\numberline {2.6}CFS - Process Scheduling Tree}{17}{subsection.2.6}%
+\contentsline {subsubsection}{\numberline {2.6.1}Frontend Implementation}{17}{subsubsection.2.6.1}%
+\contentsline {subsubsection}{\numberline {2.6.2}Backend Implementation}{17}{subsubsection.2.6.2}%
+\contentsline {subsubsection}{\numberline {2.6.3}Data used for the plot}{18}{subsubsection.2.6.3}%
+\contentsline {subsubsection}{\numberline {2.6.4}Challenges faced}{18}{subsubsection.2.6.4}%
+\contentsline {subsubsection}{\numberline {2.6.5}Uses of the plot}{19}{subsubsection.2.6.5}%
