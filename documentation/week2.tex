@@ -89,33 +89,33 @@ We choose to use Flask for the backend of our project. Flask is a micro web fram
 We are using the socket framework to establish communication between the frontend and the backend. The socket framework allows us to establish a bidirectional communication channel between the client and the server. This allows us to send and receive data in real-time, which is important for our project. We are using the socket.io library for the frontend and the Flask-SocketIO library for the backend. These libraries make it easy to establish a socket connection between the client and the server and send and receive data in real-time.
 
 \section{Plots}
-\subsection{Real-Time CPU usage}
+\subsection{CPU usage by Process}
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/top5_1.png}
+        \includegraphics[width=\textwidth]{logos and images/PLOT1_1.png}
     \end{minipage}
     \hfill
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/top5_2.png}
+        \includegraphics[width=\textwidth]{logos and images/PLOT1_2.png}
     \end{minipage}
     \caption{Top 5 High-Load Processes at different time instances}
 \end{figure}
 This plot shows the top 5 high-load processes in the system. The x-axis represents the process ID, and the y-axis represents the \% CPU load of the process. The plot shows the CPU load at two different instances of the time. The plot is updated in real-time, so the user can see the CPU load of the top 5 high-load processes as it changes over time.
 
-\subsection{Real-Time Process activity tracker}
+\subsection{CPU-Usage Stream}
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/plot2_1.png}
+        \includegraphics[width=\textwidth]{logos and images/PLOT2_1.png}
     \end{minipage}
     \hfill
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/plot2_2.png}
+        \includegraphics[width=\textwidth]{logos and images/PLOT2_2.png}
     \end{minipage}
     \caption{Snapshots of the activity tracker at two different instances}
 \end{figure}
@@ -491,16 +491,19 @@ def monitor_cpu():
 \end{itemize}
 
 \bigskip
-\subsection{HTop}
+\subsection{CPU Core Utilization}
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.8\textwidth}
+    \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/htop_1.png}
+        \includegraphics[width=\textwidth]{logos and images/HTOP_1.png}
     \end{minipage}
     \hfill
-    
-    \caption{Snapshot of the plot}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/HTOP_2.png}
+    \end{minipage}
+    \caption{Snapshots of the core utilizations at two different instances}
 \end{figure}
 The above plot updates every second, displaying the percentage of time each CPU core spends in various operational modes within a one-second interval. Additionally, the \texttt{Overall} metric represents the average CPU usage across all cores.
 \subsubsection{Frontend Implementation}
@@ -771,7 +774,7 @@ The JSON data sent to the frontend provides detailed CPU usage statistics for in
     \item \textbf{System Health Monitoring:} The \texttt{Overall} metric offers a summary of the aggregate CPU usage, which can be used to assess the general health of the system. High CPU usage across all cores may indicate that the system is under heavy load or experiencing performance issues.
     \item \textbf{Real-Time Feedback:} The plot provides real-time feedback on the system's CPU behavior, enabling users to take immediate corrective actions, such as terminating resource-heavy processes or redistributing tasks across different cores.
 \end{itemize}
-\subsection{Process Migration Model}
+\subsection{Dynamic Core Migration}
 \subsubsection{Frontend Implementation}
 
 This is a simple model to visualize process migration. Process migration is modelled in the following way:
@@ -782,13 +785,16 @@ This is a simple model to visualize process migration. Process migration is mode
 \end{enumerate}
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.8\textwidth}
+    \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/Plot3.png}
+        \includegraphics[width=\textwidth]{logos and images/MIG_1.png}
     \end{minipage}
     \hfill
-    
-    \caption{Migration Model Snapshot}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logos and images/MIG_2.png}
+    \end{minipage}
+    \caption{Core Migration at different time instances}
 \end{figure}
 The structure for creation of the model include the following:
 \begin{enumerate}
@@ -1070,17 +1076,17 @@ The JSON data sent to the frontend provides information of CPU migrations of dif
           \item Shows how system adapts to resource demands and manages core utilization.
       \end{itemize}
   \end{itemize}
-\subsection{Gantt Chart}
+\subsection{Dynamic 'Process-State' Tracking}
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/gantt_1.png}
+        \includegraphics[width=\textwidth]{logos and images/GANTT_1.png}
     \end{minipage}
     \hfill
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/gantt_2.png}
+        \includegraphics[width=\textwidth]{logos and images/GANTT_2.png}
     \end{minipage}
     \caption{Gantt Chart at different time instances}
 \end{figure}
@@ -1314,24 +1320,275 @@ This plot can be particularly valuable for:
 \end{itemize}
 Overall, the plot serves as an essential tool for monitoring and improving system performance, making it easier to track process behavior over time and make informed decisions based on real-time data.
 
-\subsection{CFS Tree}
+\subsection{CFS - Process Scheduling Tree}
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.45\textwidth}
+    \begin{minipage}{0.8\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{logos and images/IIT_Madras_Logo.svg.png}
+        \includegraphics[width=\textwidth]{logos and images/CFS_1.png}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{logos and images/IIT_Madras_Logo.svg.png}
-    \end{minipage}
-    \caption{Caption for the plot}
+    
+    \caption{Snapshot of the Tree}
 \end{figure}
+The graph visualizes the Completely Fair Scheduler (CFS)'s internal management of processes as a Red-Black Tree. Each node in the tree represents a process, uniquely identified by its Process ID (PID). The nodes are organized based on their virtual runtime (\texttt{vruntime}), which determines the priority of processes in the scheduling system.
 \subsubsection{Frontend Implementation}
+\begin{minted}{javascript}
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import Tree from "react-d3-tree";
+
+const Plot6 = () => {
+  const [treeData, setTreeData] = useState(null);
+
+  useEffect(() => {
+    const socket = io("http://localhost:5000");
+
+    socket.on("tree_data", (data) => {
+      if (data && data.root) {
+        setTreeData(formatTreeData(data.root));
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const formatTreeData = (node) => {
+    if (!node) return null;
+    return {
+      name: `${node.pid}`,
+      attributes: {},
+      children: [formatTreeData(node.left), formatTreeData(node.right)].filter(
+        (child) => child !== null
+      ),
+      nodeColor: node.color === "black" ? "green" : node.color,
+      nodeRadius: Math.max(10, String(node.pid).length * 10),
+    };
+  };
+
+  return (
+    <div
+      className="processes"
+      style={{
+        width: "100%",
+        height: "500px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <h1 style={{ marginBottom: "20px" }}>CFS - Process Scheduling Tree</h1>
+      {treeData ? (
+        <Tree
+          data={treeData}
+          orientation="vertical"
+          pathFunc="straight"
+          translate={{ x: 920, y: 30 }}
+          nodeSize={{ x: 200, y: 100 }}
+          renderCustomNodeElement={({ nodeDatum }) => (
+            <g style={{ color: "white" }}>
+              <circle
+                r={nodeDatum.nodeRadius || 10}
+                fill={nodeDatum.nodeColor}
+              />
+              <text className="node-text">{nodeDatum.name}</text>
+            </g>
+          )}
+        />
+      ) : (
+        <p>Loading tree data...</p>
+      )}
+    </div>
+  );
+};
+
+export default Plot6;
+
+\end{minted}
+\begin{itemize}
+    \item \textbf{WebSocket:} Connects to a server to receive process tree data in JSON format.
+    \item \textbf{Data Formatting:} Processes JSON nodes into a hierarchical structure with attributes like \texttt{name}, \texttt{color}, and \texttt{radius}.
+    \item \textbf{Visualization:} Renders a vertical tree where nodes are styled as colored circles with PIDs displayed.
+    \item \textbf{Styling:} The component is styled for responsive display with centered visualization.
+    \item \textbf{Error Handling:} Disconnects WebSocket on unmount and shows a loading message until data is available.
+\end{itemize}
 \subsubsection{Backend Implementation}
+\begin{minted}{python}
+    class Node:
+    def __init__(self, key, value, name):
+        self.key = key
+        self.value = value
+        self.name = name
+        self.color = 'red'
+        self.left = None
+        self.right = None
+        self.parent = None
+
+class RedBlackTree:
+    def __init__(self):
+        self.TNULL = Node(0, 0, "")
+        self.TNULL.color = 'black'
+        self.root = self.TNULL
+
+    def insert(self, key, value, name):
+        node = Node(key, value, name)
+        node.parent = None
+        node.left = self.TNULL
+        node.right = self.TNULL
+        node.color = 'red'
+
+        parent = None
+        current = self.root
+
+        while current != self.TNULL:
+            parent = current
+            if node.value < current.value:
+                current = current.left
+            else:
+                current = current.right
+
+        node.parent = parent
+        if parent is None:
+            self.root = node
+        elif node.value < parent.value:
+            parent.left = node
+        else:
+            parent.right = node
+
+        if node.parent is None:
+            node.color = 'black'
+            return
+
+        if node.parent.parent is None:
+            return
+
+        self.fix_insert(node)
+
+    def fix_insert(self, k):
+        while k.parent.color == 'red':
+            if k.parent == k.parent.parent.right:
+                u = k.parent.parent.left
+                if u.color == 'red':
+                    u.color = 'black'
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    k = k.parent.parent
+                else:
+                    if k == k.parent.left:
+                        k = k.parent
+                        self.right_rotate(k)
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    self.left_rotate(k.parent.parent)
+            else:
+                u = k.parent.parent.right
+                if u.color == 'red':
+                    u.color = 'black'
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    k = k.parent.parent
+                else:
+                    if k == k.parent.right:
+                        k = k.parent
+                        self.left_rotate(k)
+                    k.parent.color = 'black'
+                    k.parent.parent.color = 'red'
+                    self.right_rotate(k.parent.parent)
+            if k == self.root:
+                break
+        self.root.color = 'black'
+
+    def left_rotate(self, x):
+        y = x.right
+        x.right = y.left
+        if y.left != self.TNULL:
+            y.left.parent = x
+        y.parent = x.parent
+        if x.parent is None:
+            self.root = y
+        elif x == x.parent.left:
+            x.parent.left = y
+        else:
+            x.parent.right = y
+        y.left = x
+        x.parent = y
+
+    def right_rotate(self, x):
+        y = x.left
+        x.left = y.right
+        if y.right != self.TNULL:
+            y.right.parent = x
+        y.parent = x.parent
+        if x.parent is None:
+            self.root = y
+        elif x == x.parent.right:
+            x.parent.right = y
+        else:
+            x.parent.left = y
+        y.right = x
+        x.parent = y
+
+    def get_root(self):
+        return self.root
+
+    def inorder_helper(self, node):
+        if node != self.TNULL:
+            self.inorder_helper(node.left)
+            print(f"{node.key}: {node.value} ({node.name})")
+            self.inorder_helper(node.right)
+
+    def inorder(self):
+        self.inorder_helper(self.root)
+
+def serialize_tree(node, TNULL):
+    if node == TNULL:
+        return None
+    return {
+        'pid': node.key,
+        'vruntime': node.value,
+        'name': node.name,
+        'color': node.color,
+        'left': serialize_tree(node.left, TNULL),
+        'right': serialize_tree(node.right, TNULL)
+    }
+
+def get_process_vtimes():
+    while True:
+        rbt = RedBlackTree()
+        for proc in psutil.process_iter(['pid', 'name', 'cpu_times']):
+            try:
+                vtimes = proc.cpu_times()
+                rbt.insert(proc.info['pid'], vtimes.user + vtimes.system, proc.info['name'])
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        tree_data = serialize_tree(rbt.get_root(), rbt.TNULL)
+        socketio.emit('tree_data', {'root': tree_data})
+        time.sleep(SLEEP_INTERVAL)
+
+\end{minted}
+\begin{itemize}
+    \item The \texttt{Node} class represents a single node in a red-black tree, storing attributes like \texttt{key}, \texttt{value}, \texttt{name}, and pointers to parent and child nodes.
+    \item The \texttt{RedBlackTree} class manages the red-black tree, supporting insertion and ensuring tree properties through balancing methods such as \texttt{fix\_insert}, \texttt{left\_rotate}, and \texttt{right\_rotate}.
+    \item The \texttt{serialize\_tree} function converts the red-black tree structure into a serializable format, enabling data exchange or visualization.
+    \item The \texttt{get\_process\_vtimes} function uses \texttt{psutil} to iterate over active processes, fetch their virtual runtimes, and insert them into a red-black tree. The serialized tree is then emitted via a WebSocket using \texttt{socketio}.
+    \item This implementation integrates real-time process monitoring with structured tree data representation, ensuring efficient scheduling insights.
+\end{itemize}
 \subsubsection{Data used for the plot}
-Mention what all data is used.
+The provided data is in JSON format and represents a hierarchical structure of processes in a system. Each process is represented as a node in a tree, with the following attributes:
+
+\begin{itemize}
+    \item \textbf{pid}: The Process ID (PID), a unique identifier for each process.
+    \item \textbf{vruntime}: A value representing the runtime of the process within the scheduler, which helps determine process scheduling priority.
+    \item \textbf{name}: The name or description of the process.
+    \item \textbf{color}: A value that specifies the color of the node in the tree (typically black or red), often used to maintain balance in a Red-Black Tree.
+    \item \textbf{left}: A pointer to the left child node, which represents the next lower-priority process in the hierarchy.
+    \item \textbf{right}: A pointer to the right child node, representing the next higher-priority process.
+\end{itemize}
+
+The JSON structure is a recursive tree where each process may have child processes (left and right) represented as nested objects. The root of the tree represents the main process, and each child node (process) can further branch out into its respective child processes, forming a detailed hierarchy of processes.
+
 \subsubsection{Challenges faced}
 \subsubsection{Uses of the plot}
 
