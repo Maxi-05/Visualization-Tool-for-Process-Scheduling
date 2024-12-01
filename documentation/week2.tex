@@ -769,7 +769,6 @@ The JSON data sent to the frontend provides detailed CPU usage statistics for in
 \subsubsection{Uses of the plot}
 \begin{itemize}
     \item \textbf{Monitoring CPU Load:} It provides a real-time visual representation of how each core's CPU time is distributed across different states (such as user time, system time, idle time, etc.) on a per-second basis. This can be used to monitor the load on each individual core in a multi-core processor.
-    \item \textbf{Performance Optimization:} By visualizing CPU usage patterns, developers can identify potential bottlenecks in resource usage, and optimize applications or processes that are consuming excessive CPU time in specific states.
     \item \textbf{Comparing Cores:} The plot allows for a comparison of CPU usage across different cores. This can help in identifying imbalance in workload distribution between cores, which might point to issues in parallel processing or multi-threading.
     \item \textbf{System Health Monitoring:} The \texttt{Overall} metric offers a summary of the aggregate CPU usage, which can be used to assess the general health of the system. High CPU usage across all cores may indicate that the system is under heavy load or experiencing performance issues.
     \item \textbf{Real-Time Feedback:} The plot provides real-time feedback on the system's CPU behavior, enabling users to take immediate corrective actions, such as terminating resource-heavy processes or redistributing tasks across different cores.
@@ -1088,10 +1087,10 @@ The JSON data sent to the frontend provides information of CPU migrations of dif
         \centering
         \includegraphics[width=\textwidth]{logos and images/GANTT_2.png}
     \end{minipage}
-    \caption{Gantt Chart at different time instances}
+    \caption{Plot at different time instances}
 \end{figure}
 
- The Gantt chart shows the state changes of each process over time as vertical segments. Each process is represented on the x-axis, and its state transitions (running, sleeping, or idle) are shown as colored segments along the y-axis. The height of each segment represents the duration of the state, allowing you to observe how a process's behavior changes over the given time range. This layout highlights time distribution across multiple processes.
+ The plot shows the state changes of each process over time as vertical segments. Each process is represented on the x-axis, and its state transitions (running, sleeping, or idle) are shown as colored segments along the y-axis. The height of each segment represents the duration of the state, allowing you to observe how a process's behavior changes over the given time range. This layout highlights time distribution across multiple processes.
 
 \subsubsection{Frontend Implementation}
 \begin{minted}{javascript}
@@ -1284,7 +1283,7 @@ def monitor_process_states():
 \end{minted}
 
 \subsubsection{Data used for the plot}
-The data for the Gantt chart is derived from the \texttt{process\_states} dictionary, which tracks process activities over a sliding window of the last \texttt{TIME\_RANGE} seconds. This dictionary is structured to record details for each process, identified by its unique PID and name. 
+The data for the plot is derived from the \texttt{process\_states} dictionary, which tracks process activities over a sliding window of the last \texttt{TIME\_RANGE} seconds. This dictionary is structured to record details for each process, identified by its unique PID and name. 
 
 For each process, a list of state intervals is maintained. Each state interval comprises:
 \begin{itemize}
@@ -1297,24 +1296,24 @@ For each process, a list of state intervals is maintained. Each state interval c
 
 \subsubsection{Challenges faced}
 
-During the development and implementation of the Gantt chart and process monitoring system, several challenges were encountered:
+During the development and implementation of the plot and process monitoring system, several challenges were encountered:
 
 \begin{itemize}
      \item \textbf{Memory Management:} With the continuous monitoring of multiple processes, memory management became a significant challenge. The \texttt{process\_states} dictionary, which stores state intervals for each process, could potentially grow large over time, especially when monitoring long-running processes. To avoid excessive memory consumption, it was crucial to implement an efficient data structure and clean-up mechanism. State data for processes that no longer exist or whose state transitions have moved outside the defined time window needed to be regularly purged. Additionally, implementing proper memory management practices like limiting the depth of stored state intervals, discarding old data, and ensuring that only relevant state transitions are kept helped to optimize memory usage. These strategies ensured that the system remained responsive and stable without excessive memory overhead.
 
-     \item \textbf{Missing Running Intervals:} One of the challenges encountered during the monitoring process was the issue of missing running intervals, particularly when the sampling interval (sleeping interval) was set to 1 second and the time range was set to 10 seconds. Since the process states were being updated at a fixed 1-second interval, there was a possibility that a running process could transition between the sampled states without being captured in the recorded data. This resulted in a gap where the running interval was either missed entirely or inaccurately represented. This issue was noticed because we didn't even get any running processes initially because of our sleeping interval(1 sec) . But after keeping the interval for 0.1 second we are able detect those running processes .
+     \item \textbf{Missing Running Intervals:} One of the challenges encountered during the monitoring process was the issue of missing running intervals, particularly when the sampling interval (sleeping interval) was set to 1 second and the time range was set to 10 seconds. Since the process states were being updated at a fixed 1-second interval, there was a possibility that a running process could transition between the sampled states without being captured in the recorded data. This resulted in a gap where the running interval was either missed entirely or inaccurately represented. This issue was noticed because we didn't even get any running processes initially because of our sleeping interval(1 sec) . But after keeping the interval for 0.01 second we are able detect those running processes .
 
-     Even after keeping the interval for 0.1 second we still faced an issue with the number of process . As the number is too high we got very thin lines on x axis and unable to notice the processes separately , so we filtered the \texttt{process\_states} to store only the processes which have non zero duration of running state in our considered \textbf{Time Range} .
+     Even after keeping the interval for 0.01 second we still faced an issue with the number of process . As the number is too high we got very thin lines on x axis and unable to notice the processes separately , so we filtered the \texttt{process\_states} to store only the processes which have non zero duration of running state in our considered \textbf{Time Range} .
 
-     \item \textbf{Color Representation and Clarity:} Designing the Gantt chart for clarity was challenging, especially when processes rapidly switched between states. The need to display even small state transitions required careful attention to the chart's design, including ensuring that all states were visible while avoiding clutter.
+     \item \textbf{Color Representation and Clarity:} Designing the plot for clarity was challenging, especially when processes rapidly switched between states. The need to display even small state transitions required careful attention to the chart's design, including ensuring that all states were visible while avoiding clutter.
 \end{itemize}
 
 \subsubsection{Uses of the plot}
-The Gantt chart provides a visual representation of process states over time, making it useful in several ways. It helps in understanding the behavior and resource utilization of processes, such as identifying how long each process spends in different states (running, sleeping, idle). By visualizing these transitions, it becomes easier to detect patterns in process activity, monitor performance, and spot potential issues like processes stuck in the sleeping state or those that are frequently idle. 
+The plot provides a visual representation of process states over time, making it useful in several ways. It helps in understanding the behavior and resource utilization of processes, such as identifying how long each process spends in different states (running, sleeping, idle). By visualizing these transitions, it becomes easier to detect patterns in process activity, monitor performance, and spot potential issues like processes stuck in the sleeping state or those that are frequently idle. 
 
 This plot can be particularly valuable for:
 \begin{itemize}
-    \item \textbf{System Performance Monitoring:} It allows us to monitor the efficiency of process scheduling and CPU usage, providing insights into which processes are consuming resources at different times.
+    % \item \textbf{System Performance Monitoring:} It allows us to monitor the efficiency of process scheduling and CPU usage, providing insights into which processes are consuming resources at different times.
     \item \textbf{Optimization:} By observing the time spent in idle or sleeping states, it becomes possible to identify opportunities for optimization, such as reducing unnecessary wake-ups or improving the scheduling of processes or identifying the process which are in idle or sleep state for the most of the time .
     \item \textbf{Debugging and Troubleshooting:} The chart helps in identifying abnormal process behavior, such as processes frequently switching between states or processes stuck in a particular state, making it a useful tool for debugging.
 \end{itemize}
@@ -1590,6 +1589,7 @@ The provided data is in JSON format and represents a hierarchical structure of p
 The JSON structure is a recursive tree where each process may have child processes (left and right) represented as nested objects. The root of the tree represents the main process, and each child node (process) can further branch out into its respective child processes, forming a detailed hierarchy of processes.
 
 \subsubsection{Challenges faced}
+Will fill wait.
 \subsubsection{Uses of the plot}
 
 \begin{itemize}
